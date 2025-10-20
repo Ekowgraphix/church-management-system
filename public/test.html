@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Server Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 500px;
+        }
+        h1 { color: #667eea; margin: 0 0 20px 0; }
+        p { color: #666; margin: 10px 0; }
+        .success { color: #22c55e; font-weight: bold; font-size: 24px; }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        a:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ Server is Working!</h1>
+        <p class="success">Connection Successful</p>
+        <p>Your Laravel application is running properly.</p>
+        <p><strong>Server:</strong> 127.0.0.1:8000</p>
+        <p><strong>Status:</strong> Online</p>
+        <a href="/login">Go to Login Page</a>
+    </div>
+</body>
+</html>

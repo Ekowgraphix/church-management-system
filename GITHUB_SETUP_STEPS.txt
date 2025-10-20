@@ -1,0 +1,103 @@
+==========================================
+LINK YOUR PROJECT TO GITHUB - EASY STEPS
+==========================================
+
+STEP 1: Install Git (if not installed)
+---------------------------------------
+1. Open browser and go to: https://git-scm.com/download/win
+2. Click "Click here to download" (64-bit version)
+3. Run the installer
+4. Use all default settings (just keep clicking Next)
+5. Click Finish
+6. Close and reopen your terminal/Command Prompt
+
+STEP 2: Configure Git (First Time Only)
+----------------------------------------
+Open Command Prompt and type:
+
+git config --global user.name "Billy Beams"
+git config --global user.email "ekowjeremy@gmail.com"
+
+(Replace with your actual name and email)
+
+STEP 3: Initialize Git in Your Project
+---------------------------------------
+Navigate to your project folder and run:
+
+cd f:\xampp\htdocs\churchmang
+setup_github.bat
+
+This will initialize Git and make your first commit.
+
+STEP 4: Create GitHub Repository
+---------------------------------
+1. Go to: https://github.com
+2. Log in (or create free account)
+3. Click the "+" icon (top right corner)
+4. Click "New repository"
+5. Fill in:
+   - Repository name: church-management-system
+   - Description: Church Management System with Laravel
+   - Choose: Private (RECOMMENDED - contains church data)
+   - DO NOT check "Initialize this repository with a README"
+6. Click "Create repository"
+
+STEP 5: Connect Your Project to GitHub
+---------------------------------------
+GitHub will show you commands. Copy them and paste in Command Prompt.
+
+Replace YOUR-USERNAME with your actual GitHub username:
+
+git remote add origin https://github.com/YOUR-USERNAME/church-management-system.git
+git branch -M main
+git push -u origin main
+
+Enter your GitHub credentials when prompted.
+
+DONE! Your project is now on GitHub! ✅
+
+==========================================
+MAKING CHANGES IN THE FUTURE
+==========================================
+
+After editing your code, save changes to GitHub:
+
+git add .
+git commit -m "Describe what you changed"
+git push
+
+==========================================
+USEFUL COMMANDS
+==========================================
+
+Check what changed:
+git status
+
+View commit history:
+git log
+
+Pull latest changes (if working with others):
+git pull
+
+==========================================
+IMPORTANT SECURITY NOTES
+==========================================
+
+✅ The .gitignore file is already set up to exclude:
+   - .env file (passwords, API keys)
+   - Database files
+   - User uploads
+   - Cache files
+
+✅ Your sensitive data will NOT be uploaded to GitHub
+
+✅ Make repository PRIVATE if handling real church data
+
+==========================================
+NEED HELP?
+==========================================
+
+- Git documentation: https://git-scm.com/doc
+- GitHub guides: https://guides.github.com
+
+==========================================

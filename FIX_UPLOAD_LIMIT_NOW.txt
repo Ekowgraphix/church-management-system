@@ -1,0 +1,67 @@
+========================================
+FIX PHP UPLOAD LIMIT - STEP BY STEP
+========================================
+
+FOLLOW THESE EXACT STEPS:
+
+1. Open File Explorer (Windows Key + E)
+
+2. Copy and paste this path in the address bar:
+   F:\xampp\php
+
+3. Find the file: php.ini
+
+4. Right-click php.ini → "Open with" → Notepad
+
+5. Press Ctrl+F (Find)
+
+6. Type: upload_max_filesize
+   Click "Find Next"
+
+7. You'll see a line like:
+   upload_max_filesize = 40M
+   
+   Change it to:
+   upload_max_filesize = 100M
+
+8. Press Ctrl+F again
+
+9. Type: post_max_size
+   Click "Find Next"
+
+10. You'll see a line like:
+    post_max_size = 40M
+    
+    Change it to:
+    post_max_size = 100M
+
+11. Press Ctrl+F again
+
+12. Type: max_execution_time
+    Click "Find Next"
+
+13. You'll see a line like:
+    max_execution_time = 30
+    
+    Change it to:
+    max_execution_time = 300
+
+14. Press Ctrl+S to SAVE the file
+
+15. Close Notepad
+
+16. Open XAMPP Control Panel
+
+17. Click "Stop" next to Apache
+
+18. Wait 5 seconds
+
+19. Click "Start" next to Apache
+
+20. Go back to your browser
+
+21. Upload your sermon again!
+
+========================================
+DONE! Your 52.6 MB file will now upload successfully!
+========================================

@@ -1,0 +1,268 @@
+========================================
+AI CHAT - INTEGRATION PATCH
+========================================
+
+Copy and paste these additions to your existing ai-chat/index.blade.php file
+
+========================================
+1. ADD BEFORE </body> TAG:
+========================================
+
+<!-- Enhanced AI Chat Modules -->
+<script src="{{ asset('js/ai-chat-voice.js') }}"></script>
+<script src="{{ asset('js/ai-chat-attachments.js') }}"></script>
+<script src="{{ asset('js/ai-chat-responses.js') }}"></script>
+
+========================================
+2. REPLACE getAIResponse() FUNCTION:
+========================================
+
+FIND THIS:
+----------
+function getAIResponse(message) {
+    const msg = message.toLowerCase();
+    
+    if (msg.includes('hello') || msg.includes('hi')) {
+        return "Hello! 👋 ...";
+    }
+    // ... rest of function
+}
+
+REPLACE WITH:
+-------------
+function getAIResponse(message) {
+    // Use enhanced responses from ai-chat-responses.js
+    return getEnhancedAIResponse(message, currentAssistantRole);
+}
+
+========================================
+3. UPDATE addMessage() FUNCTION:
+========================================
+
+FIND THIS:
+----------
+function addMessage(content, role) {
+    const container = document.getElementById('messagesContainer');
+    // ... rest of function
+    
+    conversationHistory.push({ role, content, timestamp: new Date() });
+}
+
+ADD AFTER conversationHistory.push():
+--------------------------------------
+    // Enable voice output if voice mode is on
+    if (role === 'assistant') {
+        autoSpeakIfEnabled(content);
+    }
+
+========================================
+4. UPDATE selectAssistant() FUNCTION:
+========================================
+
+FIND THIS:
+----------
+function selectAssistant(name) {
+    document.getElementById('currentAssistant').textContent = name;
+    addSystemMessage(`Switched to ${name}. How can I assist you?`);
+}
+
+REPLACE WITH:
+-------------
+function selectAssistant(name, role) {
+    currentAssistantRole = role;
+    document.getElementById('currentAssistant').textContent = name;
+    
+    // Update all buttons
+    document.querySelectorAll('.assistant-btn').forEach(btn => {
+        btn.classList.remove('bg-white/10');
+    });
+    event.target.closest('.assistant-btn').classList.add('bg-white/10');
+    
+    addSystemMessage(`Switched to ${name}. How can I assist you?`);
+}
+
+========================================
+5. UPDATE SIDEBAR ASSISTANT BUTTONS:
+========================================
+
+FIND THIS:
+----------
+<button onclick="selectAssistant('{{ $role['name'] }}')" class="w-full text-left glass-card...">
+
+REPLACE WITH:
+-------------
+<button onclick="selectAssistant('{{ $role['name'] }}', '{{ $role['prompt'] }}')" 
+        class="w-full text-left glass-card p-4 rounded-xl hover:bg-white/10 transition group assistant-btn"
+        data-role="{{ $role['prompt'] }}">
+
+========================================
+6. UPDATE ASSISTANT ARRAY:
+========================================
+
+FIND THIS:
+----------
+@foreach([
+    ['icon' => 'book-bible', 'name' => 'Sermon Helper', 'desc' => 'Outlines & scriptures', 'color' => 'purple'],
+    ...
+] as $role)
+
+REPLACE WITH:
+-------------
+@foreach([
+    ['icon' => 'book-bible', 'name' => 'Sermon Builder', 'desc' => 'Outlines, scriptures & illustrations', 'color' => 'purple', 'prompt' => 'sermon'],
+    ['icon' => 'book-open', 'name' => 'Bible Study Generator', 'desc' => 'Study guides & discussion questions', 'color' => 'blue', 'prompt' => 'bible-study'],
+    ['icon' => 'sms', 'name' => 'SMS Writer', 'desc' => 'Craft church announcements', 'color' => 'green', 'prompt' => 'sms'],
+    ['icon' => 'hands-praying', 'name' => 'Prayer Writer', 'desc' => 'Themed prayers & prayer points', 'color' => 'pink', 'prompt' => 'prayer'],
+    ['icon' => 'chart-line', 'name' => 'Financial Analyst', 'desc' => 'Analyze giving & expenses', 'color' => 'cyan', 'prompt' => 'finance'],
+    ['icon' => 'file-alt', 'name' => 'Meeting Minutes', 'desc' => 'Summarize & format meetings', 'color' => 'orange', 'prompt' => 'minutes'],
+    ['icon' => 'envelope', 'name' => 'Letter Generator', 'desc' => 'Official church correspondence', 'color' => 'red', 'prompt' => 'letter'],
+    ['icon' => 'clipboard-list', 'name' => 'Report Bot', 'desc' => 'Generate data-driven reports', 'color' => 'yellow', 'prompt' => 'report'],
+    ['icon' => 'music', 'name' => 'Worship Planner', 'desc' => 'Service planning & song selection', 'color' => 'indigo', 'prompt' => 'worship'],
+    ['icon' => 'users', 'name' => 'Youth Ministry', 'desc' => 'Youth programs & activities', 'color' => 'teal', 'prompt' => 'youth']
+] as $role)
+
+========================================
+7. ADD VOICE MODE BUTTON (if not exists):
+========================================
+
+FIND THIS in header:
+--------------------
+<div class="flex space-x-3">
+    <button onclick="exportChat()" ...>
+
+ADD AFTER exportChat button:
+-----------------------------
+<!-- Voice Mode Toggle -->
+<button onclick="toggleVoiceMode()" id="voiceModeBtn" 
+        class="glass-card px-4 py-2 rounded-lg text-white hover:bg-white/10 transition" 
+        title="Voice Mode">
+    <i class="fas fa-microphone"></i>
+</button>
+
+========================================
+8. UPDATE VOICE BUTTON (if exists):
+========================================
+
+FIND THIS:
+----------
+<button onclick="toggleVoice()" ...>
+
+REPLACE onclick WITH:
+---------------------
+onclick="startVoiceInput()"
+
+========================================
+9. UPDATE FILE ATTACHMENT (if exists):
+========================================
+
+FIND THIS:
+----------
+<button onclick="attachFile()" ...>
+
+REPLACE onclick WITH:
+---------------------
+onclick="document.getElementById('fileUpload').click()"
+
+AND ADD THIS after the button:
+-------------------------------
+<input type="file" id="fileUpload" class="hidden" 
+       accept=".pdf,.doc,.docx,.txt" 
+       onchange="handleFileUpload(event)">
+
+========================================
+10. UPDATE VOICE BUTTON IN INPUT AREA:
+========================================
+
+FIND THIS:
+----------
+<!-- Send Button -->
+<button type="submit" class="glass-card px-6 py-3...">
+
+ADD BEFORE Send button:
+------------------------
+<!-- Voice Input Button -->
+<button type="button" onclick="startVoiceInput()" id="voiceInputBtn" 
+        class="glass-card px-4 py-3 rounded-xl text-white hover:bg-white/10 transition" 
+        title="Voice Input">
+    <i class="fas fa-microphone"></i>
+</button>
+
+========================================
+11. ADD VOICE RECORDING INDICATOR:
+========================================
+
+ADD AFTER file upload input:
+-----------------------------
+<!-- Voice Recording Indicator (hidden by default) -->
+<div id="voiceRecordingIndicator" class="hidden mb-3 glass-card p-4 rounded-lg voice-recording">
+    <div class="flex items-center space-x-4">
+        <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center animate-pulse">
+            <i class="fas fa-microphone text-white"></i>
+        </div>
+        <div class="flex-1">
+            <p class="text-white font-bold">Recording...</p>
+            <p class="text-white/60 text-sm">Speak your message clearly</p>
+        </div>
+        <button onclick="stopVoiceInput()" class="glass-card px-4 py-2 rounded-lg text-white hover:bg-white/10 transition">
+            <i class="fas fa-stop mr-2"></i>Stop
+        </button>
+    </div>
+</div>
+
+========================================
+12. ADD ATTACHMENT PREVIEW:
+========================================
+
+ADD BEFORE voice recording indicator:
+--------------------------------------
+<!-- Attachment Preview (hidden by default) -->
+<div id="attachmentPreview" class="hidden mb-3 glass-card p-3 rounded-lg">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <i class="fas fa-file text-blue-400 text-xl"></i>
+            <div>
+                <p class="text-white font-semibold text-sm" id="fileName">-</p>
+                <p class="text-white/60 text-xs" id="fileSize">-</p>
+            </div>
+        </div>
+        <button onclick="removeAttachment()" class="text-red-400 hover:text-red-300 transition">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</div>
+
+========================================
+13. ADD PULSE GLOW ANIMATION (in <style>):
+========================================
+
+ADD TO EXISTING <style> TAG:
+-----------------------------
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+    50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.6); }
+}
+.voice-recording {
+    animation: pulse-glow 1.5s infinite;
+}
+
+========================================
+THAT'S IT! YOU'RE DONE! 🎉
+========================================
+
+All advanced features are now enabled:
+✅ 10 specialized AI assistants
+✅ Voice input & output
+✅ File attachments
+✅ Enhanced responses
+
+Test by:
+1. Selecting "Sermon Builder"
+2. Typing "Create sermon on faith"
+3. Getting complete outline!
+
+Or:
+1. Click microphone button
+2. Speak your message
+3. AI responds with voice!
+
+========================================

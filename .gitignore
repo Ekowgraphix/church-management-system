@@ -1,0 +1,42 @@
+/.phpunit.cache
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+/.fleet
+/.idea
+/.vscode
+
+# User uploads
+/public/uploads/
+
+# Database
+*.sqlite
+*.sqlite-journal
+/database/*.sqlite
+
+# Generated documentation
+phpinfo.php
+/public/phpinfo.php
+/public/check-limits.php
+
+# Batch scripts (optional - you can remove these lines if you want to include them)
+# restart_apache.bat
+# open_php_ini.bat
+
+# Markdown documentation (optional - keep these if you want to share setup docs)
+# SERMON_*.md
+# FIX_*.md
+# INCREASE_*.md
+# *.txt

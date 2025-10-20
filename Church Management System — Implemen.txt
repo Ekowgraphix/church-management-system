@@ -1,0 +1,286 @@
+Church Management System — Implementation Guide
+Purpose: Deliver a production-ready specification + code snippets for Windsurf (or a developer) to implement a Laravel + JavaScript Church Management System (CMS) with multi-role login, member signup & verification, member portal, AI chat, and real-time member messaging (Pusher + Echo).
+________________________________________
+Table of Contents
+1.	System Overview
+2.	User Roles & Permissions
+3.	High-level User Flow (Login / Signup / Role selection)
+4.	Page list & feature matrix
+5.	Database schema (recommended SQL)
+6.	Laravel project structure (files & routes)
+7.	Key controllers, models, and example code snippets
+8.	Frontend (Blade + JavaScript) notes and example views
+9.	Realtime chat (Pusher + Laravel Echo) setup
+10.	AI integration (OpenAI) design notes
+11.	Env variables (.env) list
+12.	Deployment & testing checklist
+13.	Handoff notes for Windsurf / Developer
+________________________________________
+1. System Overview
+A modular Laravel-based CMS that supports: - Multi-role login (Admin, Pastor, Ministry Leader, Volunteer, Organization, Church Member) - Role selection after entering credentials (if user has multiple roles) - Self-service Church Member signup + email verification - Member Portal with Dashboard, Profile, Notifications, Calendar, Offerings/Tithes, Prayer Requests, Daily Devotional, AI Chat, Member Chat - Admin backend for managing members, finance, events, media, welfare, partnerships - Real-time member-to-member chat using Pusher (Laravel Broadcasting + Echo) - AI assistant (OpenAI) for devotionals, bible Q&A, and automated summaries
+2. User Roles & Permissions
+•	Admin — full access to all modules, settings, user management (superuser)
+•	Pastor — access to members, counselling, programs, devotionals
+•	Ministry Leader — access to assigned ministry pages (groups, schedules)
+•	Volunteer — limited access (assigned tasks, events)
+•	Organization — partner access (partnerships & finance related)
+•	Church Member — member portal features (dashboard, chat, offerings)
+Implementation: Use a roles table and role_user pivot (or role_id on users) + policy/middleware checks.
+3. High-level User Flow
+1. User visits /login
+2. Enters email + password and *selects a role* from a card/dropdown
+3. System checks if user exists with that role:
+   - If yes & verified -> redirect to role-specific dashboard
+   - If yes but not verified -> show verification pending
+   - If not and selected role == Church Member -> redirect to /signup (prefill email)
+   - If not and other role -> show "Access Denied" message
+4. Signup (member): user fills form -> creates user+member record -> sends verification email (token)
+5. User clicks verification link -> account marked verified -> login allowed
+6. Member uses portal (dashboard, AI chat, member chat, offerings, calendar, join ministries)
+4. Page List & Feature Matrix
+•	Public: /login, /signup, /verify
+•	Common after login (navbar): Dashboard, Profile, Notifications, Calendar/Events, Offerings, Tithes, Prayer Requests, Daily Devotional, Join Ministries, AI Chat, Member Chat, Logout
+•	Admin area: Members, Visitors, Programs, Service Planning, Equipment, Groups, Counselling, Children Ministry, Prayer Line, Attendance, Finance (offerings/tithes/expenses), Welfare, Partnership, Media, Settings
+Each page should support: list / add / edit / delete (RBAC controls), export (CSV/PDF), and audit logs for critical actions.
+5. Database Schema (recommended SQL)
+– Roles & Users
+CREATE TABLE roles (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) UNIQUE
+);
+
+CREATE TABLE users (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  fullname VARCHAR(255),
+  email VARCHAR(255) UNIQUE,
+  phone VARCHAR(50),
+  password VARCHAR(255),
+  verified TINYINT(1) DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL
+);
+
+CREATE TABLE role_user (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT,
+  role_id INT,
+  is_primary TINYINT(1) DEFAULT 0,
+  organization_id INT NULL
+);
+– Members (extended profile)
+CREATE TABLE members (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT UNIQUE,
+  address VARCHAR(255),
+  dob DATE,
+  gender VARCHAR(20),
+  baptism_status VARCHAR(50),
+  ministry_interest VARCHAR(255),
+  prayer_request TEXT,
+  profile_photo VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+– Email verification tokens
+CREATE TABLE email_verifications (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT,
+  token VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+– Messages (member-to-member chat)
+CREATE TABLE messages (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  sender_id BIGINT NOT NULL,
+  receiver_id BIGINT NOT NULL,
+  message TEXT,
+  file_path VARCHAR(255) NULL,
+  read_at TIMESTAMP NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+– AI Chat History (optional)
+CREATE TABLE ai_chats (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT,
+  chat_id VARCHAR(100),
+  user_message TEXT,
+  ai_response TEXT,
+  mode VARCHAR(50),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+– Finances (simple)
+CREATE TABLE finances (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  type ENUM('Income','Expense'),
+  category VARCHAR(100),
+  amount DECIMAL(12,2),
+  date DATE,
+  recorded_by BIGINT,
+  notes TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+Add FK constraints as needed for integrity.
+6. Laravel Project Structure (recommended)
+app/
+  Http/
+    Controllers/
+      AuthController.php
+      MemberController.php
+      ChatController.php
+      AIController.php
+      DashboardController.php
+  Models/
+    User.php
+    Role.php
+    Member.php
+    Message.php
+resources/views/
+  auth/login.blade.php
+  auth/signup.blade.php
+  member/dashboard.blade.php
+  chat/index.blade.php
+routes/web.php
+routes/channels.php
+config/broadcasting.php
+.env
+7. Key Controllers & Code Snippets
+AuthController@login (logic sketch)
+public function login(Request $req) {
+  $req->validate([ 'email'=>'required|email','password'=>'required','role'=>'required' ]);
+  $user = User::where('email',$req->email)->first();
+  if(!$user) return redirect()->back()->with('error','Invalid credentials');
+  // check if user has requested role
+  $role = Role::where('name',$req->role)->first();
+  if (!$role) abort(400);
+  $hasRole = $user->roles->contains($role->id);
+  if(!$hasRole) {
+    if($req->role==='Church Member') return redirect()->route('signup')->with('info','Please sign up');
+    return back()->with('error','You are not assigned to this role');
+  }
+  if (!Hash::check($req->password,$user->password)) return back()->with('error','Invalid password');
+  if(!$user->verified) return back()->with('error','Please verify your account first');
+  Auth::login($user);
+  session(['active_role'=>$role->name]);
+  return redirect()->route('dashboard.for', $role->name);
+}
+Signup & verification (sketch)
+public function signup(Request $req){
+  $req->validate([ 'fullname'=>'required','email'=>'required|email|unique:users','password'=>'required|confirmed' ]);
+  $user = User::create([...]);
+  $user->roles()->attach($memberRoleId);
+  EmailVerification::create(['user_id'=>$user->id,'token'=>Str::random(60)]);
+  // send mail with verification link using Mail::to($user->email)->send(new VerifyMail($token));
+}
+ChatController (send / fetch) sketch
+public function fetchMessages($receiver_id){
+  return Message::where(function($q) use($receiver_id){
+    $q->where('sender_id',auth()->id())->where('receiver_id',$receiver_id);
+  })->orWhere(function($q) use($receiver_id){
+    $q->where('sender_id',$receiver_id)->where('receiver_id',auth()->id());
+  })->get();
+}
+
+public function sendMessage(Request $r){
+  $m = Message::create(['sender_id'=>auth()->id(),'receiver_id'=>$r->receiver_id,'message'=>$r->message]);
+  broadcast(new MessageSent($m->toArray()))->toOthers();
+  return $m;
+}
+8. Frontend (Blade + JS) Notes
+•	Use TailwindCSS or Bootstrap for fast, modern UI.
+•	auth/login.blade.php shows role selection as large clickable cards (with icons) and email/password fields.
+•	auth/signup.blade.php is a multi-step form: Personal Info -> Spiritual Info -> Create Account.
+•	member/dashboard.blade.php contains sidebar (Profile, Notifications, Events, Offerings, Tithes, AI Chat, Member Chat).
+Example small login card (Blade)
+<form method="POST" action="{{ route('login') }}">
+  @csrf
+  <div class="roles-grid">
+    <!-- cards with radio inputs -->
+  </div>
+  <input name="email" type="email" />
+  <input name="password" type="password" />
+  <button>Login</button>
+</form>
+9. Realtime Chat — Pusher + Echo Setup (Laravel)
+1.	Install packages:
+composer require pusher/pusher-php-server
+npm install --save laravel-echo pusher-js
+2.	.env keys (example)
+BROADCAST_DRIVER=pusher
+PUSHER_APP_ID=YOUR_ID
+PUSHER_APP_KEY=YOUR_KEY
+PUSHER_APP_SECRET=YOUR_SECRET
+PUSHER_APP_CLUSTER=mt1
+3.	config/broadcasting.php pusher options must reference env.
+4.	Create MessageSent event implementing ShouldBroadcast (broadcast on new PrivateChannel('user.{id}'))
+5.	Add Broadcast::channel('user.{id}', function($user,$id){ return (int)$user->id===(int)$id; }); to routes/channels.php.
+6.	In JS (resources/js/bootstrap.js) initialize Echo:
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
+window.Pusher = Pusher;
+window.Echo = new Echo({ broadcaster: 'pusher', key: import.meta.env.VITE_PUSHER_APP_KEY, cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER, forceTLS: true });
+7.	Subscribe to private channel: window.Echo.private(user.${userId}).listen('.MessageSent', e => { ... });
+10. AI Integration (OpenAI) — Design Notes
+•	Store OPENAI_API_KEY in .env and never expose to frontend.
+•	Provide backend endpoint POST /ai/chat that receives user message, adds short context (last N messages or member stats if allowed), calls OpenAI Chat Completions, returns answer.
+•	Save chat to ai_chats table for history and moderation.
+•	For sensitive flows (counselling), add a confidential flag and restrict storage/visibility.
+Snippet (backend call):
+$client = new \GuzzleHttp\Client();
+$res = $client->post('https://api.openai.com/v1/chat/completions',[ 'headers'=>['Authorization'=>"Bearer {$key}",'Content-Type'=>'application/json'], 'json'=>[ 'model'=>'gpt-4o-mini','messages'=>[['role'=>'system','content'=>'You are FaithBot...'],['role'=>'user','content'=>$msg]], 'temperature'=>0.8 ]]);
+11. .env Variables (essential list)
+APP_NAME=ChurchMS
+APP_ENV=local
+APP_KEY=base64:...
+APP_DEBUG=true
+APP_URL=http://localhost
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=churchdb
+DB_USERNAME=root
+DB_PASSWORD=
+
+BROADCAST_DRIVER=pusher
+PUSHER_APP_ID=...
+PUSHER_APP_KEY=...
+PUSHER_APP_SECRET=...
+PUSHER_APP_CLUSTER=mt1
+
+OPENAI_API_KEY=sk-...
+SENDGRID_API_KEY=SG.xxxx
+MAIL_FROM_ADDRESS=no-reply@yourchurch.org
+MAIL_FROM_NAME="Your Church Name"
+
+# Mobile money / payment keys (optional)
+MOMO_API_KEY=
+PAYSTACK_SECRET=
+12. Deployment & Testing Checklist
+☐	Migrate DB (php artisan migrate) and seed roles
+☐	Configure .env keys (DB, Pusher, OpenAI, Mail)
+☐	Compile assets (npm run build)
+☐	Configure queue worker for broadcasting (if needed)
+☐	Test user signup -> email verification
+☐	Test login & role selection flow
+☐	Test Pusher: two browsers logged in as different users
+☐	Test AI Chat endpoint with OpenAI key
+13. Handoff Notes for Windsurf / Developer
+•	Provide this repo skeleton + this README
+•	Seed roles table with: Admin, Pastor, Ministry Leader, Volunteer, Organization, Church Member
+•	Implement secure middlewares: auth, role-check (ensures session role matches route)
+•	Use Laravel Notifications for email/SMS tasks (SendGrid & SMS provider)
+•	Keep API keys only in .env and never commit them
+•	Start with core MVP: login/signup/dashboard/chat; then add finance, welfare, media modules iteratively
+________________________________________
+Appendix: Diagrams (ASCII)
+Login / Signup Flow
+[Login Page] -> select role -> submit creds
+    |-- if user exists & verified -> role dashboard
+    |-- if user exists & not verified -> "verify account" message
+    |-- if user not exists & role == Member -> redirect /signup
+
+[Signup Page] -> submit -> create user/member -> send verification email -> verify -> login
+________________________________________
+Ready to hand to Windsurf: - This document contains the architecture, DB schema, routes, important code snippets, env variables, and testing checklist.
+- If you want, I can also export this as a .txt, .md, and .pdf file for download.
+________________________________________
+End of implementation guide.
