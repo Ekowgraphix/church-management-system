@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use App\Models\Attendance;
+use App\Models\AttendanceRecord;
+use App\Models\Service;
 use App\Models\Donation;
 use App\Models\Event;
 use App\Models\SmallGroup;
@@ -136,25 +138,38 @@ class MemberPortalController extends Controller
                 ->with('error', 'No member profile found. Please contact the administrator.');
         }
 
-        $attendance = Attendance::where('member_id', $member->id)
+        // Get QR check-in attendance records
+        $attendance = AttendanceRecord::where('member_id', $member->id)
+            ->with('service')
             ->latest('attendance_date')
+            ->latest('check_in_time')
             ->paginate(20);
 
         $stats = [
-            'total' => Attendance::where('member_id', $member->id)->count(),
-            'this_year' => Attendance::where('member_id', $member->id)
+            'total' => AttendanceRecord::where('member_id', $member->id)->count(),
+            'this_year' => AttendanceRecord::where('member_id', $member->id)
                 ->whereYear('attendance_date', now()->year)->count(),
-            'this_month' => Attendance::where('member_id', $member->id)
+            'this_month' => AttendanceRecord::where('member_id', $member->id)
                 ->whereMonth('attendance_date', now()->month)->count(),
+            'qr_check_ins' => AttendanceRecord::where('member_id', $member->id)
+                ->where('check_in_method', 'qr_code')->count(),
             'streak' => $this->calculateStreak($member->id),
         ];
 
-        return view('portal.attendance', compact('member', 'attendance', 'stats'));
+        // Get monthly attendance for chart (SQLite compatible)
+        $monthlyAttendance = AttendanceRecord::where('member_id', $member->id)
+            ->whereYear('attendance_date', now()->year)
+            ->selectRaw('CAST(strftime("%m", attendance_date) AS INTEGER) as month, COUNT(*) as count')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        return view('portal.attendance', compact('member', 'attendance', 'stats', 'monthlyAttendance'));
     }
 
     private function calculateStreak($memberId)
     {
-        $dates = Attendance::where('member_id', $memberId)
+        $dates = AttendanceRecord::where('member_id', $memberId)
             ->orderBy('attendance_date', 'desc')
             ->pluck('attendance_date')
             ->map(fn($d) => $d->format('Y-m-d'))

@@ -74,5 +74,6 @@ class Kernel extends HttpKernel
         'organization.only' => \App\Http\Middleware\OrganizationOnly::class,
         'volunteer.only' => \App\Http\Middleware\VolunteerOnly::class,
         'ministry.leader.only' => \App\Http\Middleware\MinistryLeaderOnly::class,
+        'media.team.only' => \App\Http\Middleware\MediaTeamOnly::class,
     ];
 }

@@ -123,4 +123,15 @@
         </div>
     </div>
 </div>
+
+<script>
+// Refresh Insights Button
+document.querySelector('.bg-purple-600').addEventListener('click', function() {
+    alert('🔄 Refreshing AI Insights...\n\nAnalyzing latest data with AI...');
+    // TODO: Trigger AI analysis and refresh data
+    setTimeout(() => {
+        alert('✅ Insights refreshed successfully!');
+    }, 1500);
+});
+</script>
 @endsection

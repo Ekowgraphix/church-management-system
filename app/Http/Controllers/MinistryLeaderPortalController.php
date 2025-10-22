@@ -80,11 +80,22 @@ class MinistryLeaderPortalController extends Controller
      */
     public function reports()
     {
-        // Get report data
-        $monthlyGrowth = Member::selectRaw('COUNT(*) as count, MONTH(created_at) as month')
-            ->whereYear('created_at', now()->year)
-            ->groupBy('month')
-            ->get();
+        // Get report data - SQLite compatible version
+        $dbDriver = config('database.default');
+        
+        if ($dbDriver === 'sqlite') {
+            // SQLite uses strftime for date functions
+            $monthlyGrowth = Member::selectRaw("COUNT(*) as count, CAST(strftime('%m', created_at) AS INTEGER) as month")
+                ->whereRaw("strftime('%Y', created_at) = ?", [now()->year])
+                ->groupBy('month')
+                ->get();
+        } else {
+            // MySQL/PostgreSQL version
+            $monthlyGrowth = Member::selectRaw('COUNT(*) as count, MONTH(created_at) as month')
+                ->whereYear('created_at', now()->year)
+                ->groupBy('month')
+                ->get();
+        }
         
         $eventAttendance = Event::where('event_date', '>=', now()->subMonths(3))
             ->with('attendees')

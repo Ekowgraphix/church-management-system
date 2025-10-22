@@ -118,4 +118,43 @@
         </table>
     </div>
 </div>
+
+<script>
+// Add Staff Member
+document.querySelector('.bg-green-600').addEventListener('click', function() {
+    alert('➕ Add Staff Member\n\nOpening staff registration form...');
+    // TODO: Open modal or redirect to staff creation form
+});
+
+// Edit Staff
+document.querySelectorAll('.fa-edit').forEach(btn => {
+    btn.parentElement.addEventListener('click', function() {
+        alert('✏️ Edit Staff\n\nOpening staff edit form...');
+        // TODO: Open edit modal with staff data
+    });
+});
+
+// Disable/Suspend Staff
+document.querySelectorAll('.fa-user-slash').forEach(btn => {
+    btn.parentElement.addEventListener('click', function() {
+        if(confirm('⚠️ Are you sure you want to suspend this staff member?')) {
+            alert('Staff member suspended successfully!');
+            // TODO: Send suspend request to backend
+        }
+    });
+});
+
+// Role Filter
+document.querySelector('select').addEventListener('change', function() {
+    alert(`🔍 Filtering by role: ${this.value}`);
+    // TODO: Implement role filtering
+});
+
+// Search Functionality
+document.querySelector('input[type="text"]').addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    // TODO: Implement search filtering
+    console.log('Searching for:', searchTerm);
+});
+</script>
 @endsection

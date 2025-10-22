@@ -1,71 +1,78 @@
 @extends('layouts.organization')
 
 @section('content')
-<div>
-    <!-- Welcome Header -->
-    <div class="bg-white rounded-2xl shadow-lg p-8 mb-6">
+<div class="p-8">
+    <!-- Welcome Header (Matching ChurchMang Style) -->
+    <div class="bg-gradient-to-br from-teal-800/40 to-slate-800/40 backdrop-blur-sm rounded-3xl p-8 mb-8 border border-teal-500/20 shadow-2xl shadow-teal-500/10">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-3xl font-bold text-gray-800">🌍 Organization Dashboard</h1>
-                <p class="text-gray-600">Multi-branch oversight and management</p>
+                <h1 class="text-4xl font-black text-white mb-3">Welcome Back, Admin User! 👋</h1>
+                <p class="text-teal-100 text-lg">Here's what's happening in your church today</p>
             </div>
-            <div class="text-right">
-                <p class="text-sm text-gray-600">{{ now()->format('l, F j, Y') }}</p>
-                <p class="text-xs text-gray-500">Last updated: {{ now()->format('h:i A') }}</p>
+            <div class="bg-gradient-to-br from-teal-600/30 to-teal-700/30 backdrop-blur-md border-2 border-teal-400/40 rounded-2xl px-6 py-4 shadow-lg shadow-teal-500/20">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-calendar-alt text-teal-300 text-2xl"></i>
+                    <p class="text-white font-bold text-lg">{{ now()->format('l, F j, Y') }}</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
-        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-lg p-6 text-white">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                    <i class="fas fa-code-branch text-2xl"></i>
+    <!-- Summary Cards (Matching ChurchMang Style) -->
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr);" class="gap-6 mb-8">
+        <div class="group bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 rounded-3xl p-8 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/50 border border-blue-400/30">
+            <div class="flex items-start justify-between mb-6">
+                <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center group-hover:bg-white/30 transition-all shadow-lg">
+                    <i class="fas fa-code-branch text-3xl"></i>
                 </div>
+                <span class="text-xs font-extrabold bg-blue-400/30 px-3 py-1.5 rounded-full uppercase tracking-wider">Total</span>
             </div>
-            <p class="text-sm opacity-90 mb-1">Total Branches</p>
-            <p class="text-4xl font-black">{{ $stats['total_branches'] }}</p>
+            <p class="text-lg font-bold opacity-90 mb-2">Total Branches</p>
+            <p class="text-6xl font-black">{{ $stats['total_branches'] }}</p>
         </div>
 
-        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg p-6 text-white">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                    <i class="fas fa-users text-2xl"></i>
+        <div class="group bg-gradient-to-br from-green-500 via-green-600 to-green-700 rounded-3xl p-8 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-green-500/50 border border-green-400/30">
+            <div class="flex items-start justify-between mb-6">
+                <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center group-hover:bg-white/30 transition-all shadow-lg">
+                    <i class="fas fa-users text-3xl"></i>
                 </div>
+                <span class="text-xs font-extrabold bg-green-400/30 px-3 py-1.5 rounded-full uppercase tracking-wider">Active</span>
             </div>
-            <p class="text-sm opacity-90 mb-1">Total Members</p>
-            <p class="text-4xl font-black">{{ number_format($stats['total_members']) }}</p>
+            <p class="text-lg font-bold opacity-90 mb-2">Total Members</p>
+            <p class="text-6xl font-black">{{ number_format($stats['total_members']) }}</p>
         </div>
 
-        <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-lg p-6 text-white">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                    <i class="fas fa-hands-helping text-2xl"></i>
+        <div class="group bg-gradient-to-br from-purple-500 via-purple-600 to-purple-700 rounded-3xl p-8 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50 border border-purple-400/30">
+            <div class="flex items-start justify-between mb-6">
+                <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center group-hover:bg-white/30 transition-all shadow-lg">
+                    <i class="fas fa-hands-helping text-3xl"></i>
                 </div>
+                <span class="text-xs font-extrabold bg-purple-400/30 px-3 py-1.5 rounded-full uppercase tracking-wider">Volunteers</span>
             </div>
-            <p class="text-sm opacity-90 mb-1">Total Volunteers</p>
-            <p class="text-4xl font-black">{{ $stats['total_volunteers'] }}</p>
+            <p class="text-lg font-bold opacity-90 mb-2">Total Volunteers</p>
+            <p class="text-6xl font-black">{{ $stats['total_volunteers'] }}</p>
         </div>
 
-        <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl shadow-lg p-6 text-white">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                    <i class="fas fa-calendar-alt text-2xl"></i>
+        <div class="group bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 rounded-3xl p-8 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/50 border border-orange-400/30">
+            <div class="flex items-start justify-between mb-6">
+                <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center group-hover:bg-white/30 transition-all shadow-lg">
+                    <i class="fas fa-calendar-alt text-3xl"></i>
                 </div>
+                <span class="text-xs font-extrabold bg-orange-400/30 px-3 py-1.5 rounded-full uppercase tracking-wider">Upcoming</span>
             </div>
-            <p class="text-sm opacity-90 mb-1">Current Events</p>
-            <p class="text-4xl font-black">{{ $stats['current_events'] }}</p>
+            <p class="text-lg font-bold opacity-90 mb-2">Current Events</p>
+            <p class="text-6xl font-black">{{ $stats['current_events'] }}</p>
         </div>
 
-        <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl shadow-lg p-6 text-white">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                    <i class="fas fa-hand-holding-usd text-2xl"></i>
+        <div class="group bg-gradient-to-br from-yellow-500 via-yellow-600 to-yellow-700 rounded-3xl p-8 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-yellow-500/50 border border-yellow-400/30">
+            <div class="flex items-start justify-between mb-6">
+                <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center group-hover:bg-white/30 transition-all shadow-lg">
+                    <i class="fas fa-hand-holding-usd text-3xl"></i>
                 </div>
+                <span class="text-xs font-extrabold bg-yellow-400/30 px-3 py-1.5 rounded-full uppercase tracking-wider">Net Income</span>
             </div>
-            <p class="text-sm opacity-90 mb-1">Monthly Giving</p>
-            <p class="text-3xl font-black">₵{{ number_format($stats['monthly_giving']) }}</p>
+            <p class="text-lg font-bold opacity-90 mb-2">Monthly Giving</p>
+            <p class="text-5xl font-black">₵{{ number_format($stats['monthly_giving']) }}</p>
         </div>
     </div>
 

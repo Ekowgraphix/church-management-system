@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mobile Fit Test</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        .test-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+        
+        .status.pass {
+            background: #10b981;
+        }
+        
+        .status.fail {
+            background: #ef4444;
+        }
+        
+        .test-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 10px;
+            border-left: 4px solid #10b981;
+        }
+        
+        .test-item.fail {
+            border-left-color: #ef4444;
+        }
+        
+        button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        .info {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .warning {
+            background: rgba(239, 68, 68, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid #ef4444;
+            margin-top: 1rem;
+        }
+        
+        .full-width-test {
+            width: 100%;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="test-box">
+            <h1>📱 Mobile Fit Test</h1>
+            <p class="info">Testing if everything fits on your screen</p>
+        </div>
+        
+        <div class="test-box">
+            <h2 style="font-size: 1.2rem; margin-bottom: 1rem;">📐 Screen Info</h2>
+            <div class="test-item">
+                <strong>Screen Width:</strong> <span id="screenWidth">-</span>
+            </div>
+            <div class="test-item">
+                <strong>Window Width:</strong> <span id="windowWidth">-</span>
+            </div>
+            <div class="test-item">
+                <strong>Body Width:</strong> <span id="bodyWidth">-</span>
+            </div>
+            <div class="test-item">
+                <strong>Device Type:</strong> <span id="deviceType">-</span>
+            </div>
+        </div>
+        
+        <div class="test-box">
+            <h2 style="font-size: 1.2rem; margin-bottom: 1rem;">✅ Fit Tests</h2>
+            <div class="test-item" id="test1">
+                <strong>✓ No horizontal scroll:</strong> <span id="scrollTest">Testing...</span>
+            </div>
+            <div class="test-item" id="test2">
+                <strong>✓ Viewport meta tag:</strong> <span id="viewportTest">Testing...</span>
+            </div>
+            <div class="test-item" id="test3">
+                <strong>✓ Full width element:</strong>
+                <div class="full-width-test">This should fit exactly</div>
+            </div>
+        </div>
+        
+        <div class="test-box">
+            <h2 style="font-size: 1.2rem; margin-bottom: 1rem;">📊 Overall Status</h2>
+            <span id="overallStatus" class="status">Checking...</span>
+            <p id="recommendation" style="margin-top: 1rem;"></p>
+        </div>
+        
+        <div id="warningBox" class="warning" style="display: none;">
+            <strong>⚠️ Issues Detected:</strong>
+            <ul id="issues" style="margin-top: 0.5rem; padding-left: 1.5rem;"></ul>
+        </div>
+        
+        <button onclick="location.href='/'">
+            🏠 Go to Church System
+        </button>
+        
+        <button onclick="location.reload()" style="background: transparent; color: white; border: 2px solid white;">
+            🔄 Refresh Test
+        </button>
+    </div>
+    
+    <script>
+        function runTests() {
+            const screenWidth = window.screen.width;
+            const windowWidth = window.innerWidth;
+            const bodyWidth = document.body.offsetWidth;
+            const hasHorizontalScroll = document.body.scrollWidth > windowWidth;
+            const viewport = document.querySelector('meta[name="viewport"]');
+            
+            // Update screen info
+            document.getElementById('screenWidth').textContent = screenWidth + 'px';
+            document.getElementById('windowWidth').textContent = windowWidth + 'px';
+            document.getElementById('bodyWidth').textContent = bodyWidth + 'px';
+            
+            // Device type
+            let deviceType = 'Desktop';
+            if (windowWidth < 640) {
+                deviceType = '📱 Phone';
+            } else if (windowWidth < 1024) {
+                deviceType = '📱 Tablet';
+            }
+            document.getElementById('deviceType').textContent = deviceType;
+            
+            // Test 1: Horizontal scroll
+            const test1 = document.getElementById('test1');
+            if (hasHorizontalScroll) {
+                test1.classList.add('fail');
+                document.getElementById('scrollTest').textContent = '❌ FAIL - Page is wider than screen';
+            } else {
+                document.getElementById('scrollTest').textContent = '✅ PASS';
+            }
+            
+            // Test 2: Viewport meta tag
+            const test2 = document.getElementById('test2');
+            if (viewport && viewport.content.includes('width=device-width')) {
+                document.getElementById('viewportTest').textContent = '✅ PASS';
+            } else {
+                test2.classList.add('fail');
+                document.getElementById('viewportTest').textContent = '❌ FAIL - Not configured';
+            }
+            
+            // Overall status
+            const allPassed = !hasHorizontalScroll && viewport;
+            const statusEl = document.getElementById('overallStatus');
+            const recEl = document.getElementById('recommendation');
+            
+            if (allPassed) {
+                statusEl.textContent = '✅ PERFECT FIT';
+                statusEl.className = 'status pass';
+                recEl.textContent = '🎉 Everything fits perfectly on your device! The system will look great.';
+            } else {
+                statusEl.textContent = '⚠️ NEEDS FIX';
+                statusEl.className = 'status fail';
+                recEl.textContent = '⚠️ There are fit issues. The main system might not display correctly.';
+                
+                // Show issues
+                const warningBox = document.getElementById('warningBox');
+                const issuesList = document.getElementById('issues');
+                warningBox.style.display = 'block';
+                
+                if (hasHorizontalScroll) {
+                    const li = document.createElement('li');
+                    li.textContent = 'Page is wider than screen - will require horizontal scrolling';
+                    issuesList.appendChild(li);
+                }
+                
+                if (!viewport || !viewport.content.includes('width=device-width')) {
+                    const li = document.createElement('li');
+                    li.textContent = 'Viewport not properly configured';
+                    issuesList.appendChild(li);
+                }
+            }
+        }
+        
+        // Run tests on load and resize
+        runTests();
+        window.addEventListener('resize', runTests);
+    </script>
+</body>
+</html>

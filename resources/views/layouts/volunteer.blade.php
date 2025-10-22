@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Volunteer - {{ config('app.name') }}</title>
     
@@ -11,6 +11,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
+        /* FORCE MOBILE BASE STYLES */
+        html {
+            font-size: 16px;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+            position: relative;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            min-width: 320px;
+        }
+        
+        *, *::before, *::after {
+            box-sizing: border-box;
+            max-width: 100%;
+        }
         * {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-font-smoothing: antialiased;
@@ -530,12 +554,610 @@
             cursor: not-allowed;
             transform: none !important;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+                width: 280px !important;
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            
+            .mobile-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 35;
+                backdrop-filter: blur(4px);
+            }
+            
+            .mobile-overlay.active {
+                display: block;
+            }
+            
+            .mobile-menu-btn {
+                display: flex !important;
+            }
+            
+            .top-bar {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+            
+            .top-bar h1 {
+                font-size: 1.5rem !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 260px !important;
+            }
+            
+            .top-bar {
+                padding-top: 1rem !important;
+                padding-bottom: 1rem !important;
+            }
+            
+            .top-bar h1 {
+                font-size: 1.25rem !important;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .hide-mobile {
+                display: none !important;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .top-bar .user-info {
+                display: none !important;
+            }
+            
+            body {
+                font-size: 14px;
+            }
+            
+            .glass-card {
+                padding: 1rem !important;
+            }
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .mobile-menu-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .mobile-menu-btn i {
+            color: #86efac;
+            font-size: 1.5rem;
+        }
+
+        /* Aggressive Mobile Fit CSS */
+        * {
+            box-sizing: border-box !important;
+        }
+        
+        html {
+            overflow-x: hidden;
+            width: 100%;
+        }
+        
+        body {
+            overflow-x: hidden !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        
+        @media (max-width: 1024px) {
+            body, html {
+                overflow-x: hidden !important;
+                max-width: 100vw !important;
+            }
+            
+            .sidebar {
+                position: fixed !important;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                z-index: 50 !important;
+            }
+            
+            main, .main-content, .content-area {
+                width: 100% !important;
+                max-width: 100vw !important;
+                margin-left: 0 !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+                overflow-x: hidden !important;
+            }
+            
+            .container, .max-w-7xl, .w-full {
+                max-width: 100% !important;
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            img {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .top-bar, .header {
+                padding: 1rem !important;
+                flex-wrap: wrap;
+            }
+            
+            h1 {
+                font-size: 1.5rem !important;
+                word-wrap: break-word;
+            }
+            
+            h2 {
+                font-size: 1.25rem !important;
+            }
+            
+            h3 {
+                font-size: 1.1rem !important;
+            }
+            
+            .card, .glass-card, .bg-white {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding: 1rem !important;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            
+            button, .btn, a.btn {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            
+            input, textarea, select {
+                width: 100% !important;
+                font-size: 16px !important;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            body {
+                font-size: 14px !important;
+            }
+            
+            .p-10, .p-8, .p-6 {
+                padding: 1rem !important;
+            }
+            
+            .px-10, .px-8, .px-6 {
+                padding-left: 0.75rem !important;
+                padding-right: 0.75rem !important;
+            }
+            
+            .text-3xl {
+                font-size: 1.25rem !important;
+            }
+            
+            .text-2xl {
+                font-size: 1.125rem !important;
+            }
+            
+            .space-x-6 > * + *, .space-x-4 > * + * {
+                margin-left: 0.5rem !important;
+            }
+            
+            .gap-6 {
+                gap: 0.75rem !important;
+            }
+        }
+
+        /* Logout Button Always Visible */
+        .logout-form {
+            display: inline-block !important;
+        }
+        
+        .logout-form button {
+            white-space: nowrap;
+        }
+        
+        /* Clean Mobile Dashboard Layout */
+        @media (max-width: 1024px) {
+            /* Hide everything except hamburger, profile, and logout on mobile */
+            .top-bar .space-x-6 > *:not(.logout-form) {
+                display: none !important;
+            }
+            
+            /* Mobile logout button - icon only */
+            .logout-form button span {
+                display: none;
+            }
+            
+            .logout-form button {
+                padding: 0.5rem !important;
+                min-width: 40px;
+                justify-content: center;
+            }
+            
+            /* Hide everything except hamburger and profile on mobile (legacy) */
+            .top-bar .space-x-6, .top-bar .space-x-4 {
+                display: none !important;
+            }
+            
+            .top-bar {
+                padding: 0.75rem 1rem !important;
+                min-height: 60px;
+            }
+            
+            .mobile-menu-btn {
+                width: 40px !important;
+                height: 40px !important;
+                margin-right: 0.5rem;
+            }
+            
+            /* Top bar layout - just hamburger and profile */
+            .top-bar > div {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                gap: 0.5rem;
+            }
+            
+            .top-bar h1 {
+                font-size: 1.25rem !important;
+                margin: 0 !important;
+                flex: 1;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            .top-bar p {
+                display: none !important;
+            }
+            
+            /* Profile image smaller on mobile */
+            .top-bar img, .top-bar > div > div > img {
+                width: 35px !important;
+                height: 35px !important;
+                min-width: 35px !important;
+            }
+            
+            .top-bar .gradient-green {
+                width: 35px !important;
+                height: 35px !important;
+                min-width: 35px !important;
+                font-size: 1rem !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            /* Dashboard cards full width on mobile */
+            .grid-cols-2, .grid-cols-3, .grid-cols-4 {
+                grid-template-columns: 1fr !important;
+            }
+            
+            /* Reduce padding on cards */
+            .rounded-lg, .glass-card, .bg-white {
+                padding: 1rem !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            /* Text sizes */
+            h1 { font-size: 1.25rem !important; }
+            h2 { font-size: 1.1rem !important; }
+            h3 { font-size: 1rem !important; }
+            
+            /* Buttons full width on mobile */
+            .btn, button:not(.mobile-menu-btn) {
+                width: 100% !important;
+                margin-bottom: 0.5rem;
+            }
+            
+            /* Make tables scrollable */
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            /* Extra small screens */
+            body {
+                font-size: 14px !important;
+            }
+            
+            .top-bar h1 {
+                font-size: 1.1rem !important;
+            }
+            
+            main, .p-10, .p-8 {
+                padding: 0.75rem !important;
+            }
+            
+            /* Compact cards */
+            .glass-card, .bg-white, .rounded-lg {
+                padding: 0.75rem !important;
+            }
+        }
+
+        
+        /* Desktop First - Sidebar visible, content has margin */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 320px;
+            z-index: 40;
+        }
+        
+        .main-content {
+            margin-left: 320px;
+            width: calc(100% - 320px);
+        }
+        
+        /* Tablet and Mobile - Sidebar hidden, content full width */
+        @media (max-width: 1023px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+        }
+        
+        /* Desktop - Sidebar always visible */
+        @media (min-width: 1024px) {
+            .sidebar {
+                transform: translateX(0) !important;
+            }
+            
+            .main-content {
+                margin-left: 320px !important;
+                width: calc(100% - 320px) !important;
+            }
+        }
+
+
+        /* ============================================
+           PROPER RESPONSIVE DESIGN - AUTO DEVICE DETECTION
+           ============================================ */
+        
+        /* Reset and Base Styles */
+        * {
+            box-sizing: border-box;
+        }
+        
+        html {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+        }
+        
+        body {
+            width: 100%;
+            min-height: 100%;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Sidebar Base Styles */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 320px;
+            height: 100vh;
+            z-index: 40;
+            overflow-y: auto;
+        }
+        
+        /* Main Content Base Styles */
+        .main-content {
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* ============================================
+           MOBILE FIRST - PHONES (Default < 1024px)
+           ============================================ */
+        
+        /* Mobile: Sidebar hidden by default */
+        @media (max-width: 1023px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100vw !important;
+            }
+            
+            body, html {
+                overflow-x: hidden !important;
+                max-width: 100vw !important;
+            }
+            
+            /* Mobile: Show hamburger button */
+            .mobile-menu-btn {
+                display: flex !important;
+            }
+        }
+        
+        /* ============================================
+           DESKTOP - LARGE SCREENS (≥ 1024px)
+           ============================================ */
+        
+        @media (min-width: 1024px) {
+            /* Desktop: Sidebar always visible */
+            .sidebar {
+                transform: translateX(0) !important;
+                display: block !important;
+            }
+            
+            /* Desktop: Content has margin for sidebar */
+            .main-content {
+                margin-left: 320px !important;
+                width: calc(100% - 320px) !important;
+            }
+            
+            /* Desktop: Hide hamburger button */
+            .mobile-menu-btn {
+                display: none !important;
+            }
+        }
+        
+        /* ============================================
+           SPECIFIC MOBILE FIXES
+           ============================================ */
+        
+        @media (max-width: 767px) {
+            /* Extra small devices */
+            .top-bar {
+                padding: 0.75rem 1rem !important;
+            }
+            
+            .top-bar h1 {
+                font-size: 1.25rem !important;
+            }
+            
+            /* Hide non-essential items in header */
+            .top-bar .space-x-6 > button:not(.logout-form) {
+                display: none !important;
+            }
+        }
+
+
+        /* ============================================
+           AGGRESSIVE MOBILE FIX - OVERRIDE EVERYTHING
+           ============================================ */
+        
+        /* Force full width on mobile - Override Tailwind */
+        @media (max-width: 1023px) {
+            
+            /* Force main content to be full width on mobile */
+            .main-content,
+            div.main-content,
+            .flex-1.main-content {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                width: 100vw !important;
+                max-width: 100vw !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                position: relative !important;
+            }
+            
+            /* Force body and html to prevent horizontal scroll */
+            html, body {
+                width: 100vw !important;
+                max-width: 100vw !important;
+                overflow-x: hidden !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            /* Force all containers inside main-content to be full width */
+            .main-content > * {
+                max-width: 100vw !important;
+            }
+            
+            /* Force the top bar to be full width */
+            .top-bar {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                width: 100vw !important;
+                max-width: 100vw !important;
+                left: 0 !important;
+                right: 0 !important;
+            }
+            
+            /* Force main tag to be full width */
+            main {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                width: 100% !important;
+                max-width: 100vw !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+            
+            /* Hide sidebar completely on mobile */
+            .sidebar {
+                display: none !important;
+            }
+            
+            .sidebar.show {
+                display: block !important;
+            }
+        }
+
     </style>
 </head>
+<!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
+    
 <body class="font-sans antialiased">
     <div class="flex min-h-screen relative">
         <!-- Sidebar -->
-        <aside class="sidebar w-80 h-screen fixed left-0 top-0 z-40 flex flex-col overflow-hidden">
+        <aside class="sidebar" id="sidebar" w-80 h-screen fixed left-0 top-0 z-40 flex flex-col overflow-hidden">
             <!-- Logo Section - Fixed at top -->
             <div class="p-8 border-b border-white border-opacity-10 flex-shrink-0">
                 <div class="flex items-center space-x-4">
@@ -617,6 +1239,19 @@
                 
             </nav>
             
+            <!-- Logout Button in Sidebar - Fixed at bottom -->
+            <div class="p-6 border-t border-white border-opacity-10 flex-shrink-0 space-y-3">
+                <!-- Logout Button -->
+                <form method="POST" action="{{ route('logout') }}" class="w-full">
+                    @csrf
+                    <button type="submit" 
+                            class="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-red-500/20 hover:bg-red-500 rounded-xl text-red-400 hover:text-white transition-all border border-red-500/30 hover:border-red-500 group"
+                            onclick="return confirm('Are you sure you want to logout?')">
+                        <i class="fas fa-sign-out-alt text-lg"></i>
+                        <span class="font-semibold text-sm">Logout</span>
+                    </button>
+                </form>
+                
             <!-- Premium Badge - Fixed at bottom -->
             <div class="p-6 border-t border-white border-opacity-10 flex-shrink-0">
                 <div class="glass-card p-4 rounded-2xl shimmer">
@@ -634,58 +1269,65 @@
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 ml-80 relative z-10">
+        <div class="flex-1 main-content relative z-10">
             <!-- Top Bar -->
             <header class="top-bar sticky top-0 z-30">
-                <div class="flex items-center justify-between px-10 py-6">
-                    <div>
-                        <h1 class="text-3xl font-black text-green-300">@yield('page-title', 'Dashboard')</h1>
-                        <p class="text-sm text-green-200 mt-1 font-medium">@yield('page-subtitle', 'Welcome back to your workspace')</p>
+                <div class="flex items-center justify-between px-10 py-4">
+                    <!-- Mobile Menu Button -->
+                    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <div class="flex-1 flex items-center gap-2">
+                        <h1 class="text-xl font-black text-green-300">@yield('page-title', 'Dashboard')</h1>
+                        <span class="text-xs text-green-200">@yield('page-subtitle', 'Welcome back to your workspace')</span>
                     </div>
-                    <div class="flex items-center space-x-6">
-                        <button onclick="toggleSearch()" class="relative text-green-300 hover:text-green-200 transition-colors group">
-                            <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center group-hover:bg-white/10 transition-all">
-                                <i class="fas fa-search text-lg text-green-300"></i>
-                            </div>
+                    
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleSearch()" class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center hover:bg-white/10 transition-all text-green-300 hover:text-green-200">
+                            <i class="fas fa-search text-lg"></i>
                         </button>
-                        <button onclick="toggleNotifications()" class="relative text-green-300 hover:text-green-200 transition-colors group">
-                            <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center group-hover:bg-white/10 transition-all">
-                                <i class="fas fa-bell text-lg text-green-300"></i>
-                                <span class="notification-badge absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-red-500 to-pink-600 rounded-full text-white text-xs flex items-center justify-center font-bold shadow-lg">3</span>
-                            </div>
+                        
+                        <button onclick="toggleNotifications()" class="relative w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center hover:bg-white/10 transition-all text-green-300 hover:text-green-200">
+                            <i class="fas fa-bell text-lg"></i>
+                            <span class="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-red-500 to-pink-600 rounded-full text-white text-xs flex items-center justify-center font-bold shadow-lg">3</span>
                         </button>
-                        <div class="h-12 w-px bg-white/10"></div>
-                        <div class="flex items-center space-x-4">
-                            <div class="text-right">
-                                <p class="text-sm font-bold text-green-300">{{ auth()->user()->name }}</p>
-                                <p class="text-xs text-green-200">Volunteer</p>
-                            </div>
-                            @php
-                                $currentMember = \App\Models\Member::where('email', auth()->user()->email)->first();
-                            @endphp
-                            @if($currentMember && $currentMember->photo)
-                                <img src="{{ asset('storage/' . $currentMember->photo) }}" 
-                                     alt="{{ auth()->user()->name }}"
-                                     class="w-14 h-14 rounded-2xl object-cover border-4 border-green-500 shadow-2xl logo-glow cursor-pointer hover:scale-110 transition-transform">
-                            @else
-                                <div class="w-14 h-14 gradient-green rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-2xl logo-glow cursor-pointer hover:scale-110 transition-transform">
-                                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                                </div>
-                            @endif
-                            <form method="POST" action="{{ route('logout') }}" class="inline">
-                                @csrf
-                                <button type="submit" class="w-12 h-12 bg-white/5 hover:bg-red-500/20 rounded-xl flex items-center justify-center text-green-300 hover:text-red-400 transition-all">
-                                    <i class="fas fa-sign-out-alt text-lg"></i>
-                                </button>
-                            </form>
+                        
+                        <div class="text-right">
+                            <p class="text-sm font-semibold text-green-300 whitespace-nowrap">{{ auth()->user()->name }}</p>
+                            <p class="text-xs text-green-200">Volunteer</p>
                         </div>
+                        
+                        @php
+                            $currentMember = \App\Models\Member::where('email', auth()->user()->email)->first();
+                        @endphp
+                        @if($currentMember && $currentMember->photo)
+                            <img src="{{ asset('storage/' . $currentMember->photo) }}" 
+                                 alt="{{ auth()->user()->name }}"
+                                 class="w-12 h-12 rounded-2xl object-cover border-2 border-green-500 shadow-xl cursor-pointer hover:scale-105 transition-transform">
+                        @else
+                            <div class="w-12 h-12 gradient-green rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-xl cursor-pointer hover:scale-105 transition-transform">
+                                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                            </div>
+                        @endif
+                        
+                        <!-- Logout Button -->
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" 
+                                    class="w-12 h-12 bg-red-500/20 hover:bg-red-500 rounded-xl flex items-center justify-center text-red-400 hover:text-white transition-all border border-red-500/30 hover:border-red-500"
+                                    onclick="return confirm('Are you sure you want to logout?')" title="Logout">
+                                <i class="fas fa-sign-out-alt text-lg"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </header>
 
             <!-- Page Content -->
-            <main class="p-10 animate-fade-in">
-                @if (session('success'))
+            <main class="animate-fade-in">
+                <div class="max-w-[1920px] mx-auto px-8 py-8 space-y-6">
+                    @if (session('success'))
                     <div class="mb-8 glass-card border-l-4 border-green-500 px-6 py-5 rounded-2xl flex items-center space-x-4 shimmer">
                         <div class="w-12 h-12 gradient-green rounded-xl flex items-center justify-center shadow-lg">
                             <i class="fas fa-check-circle text-white text-xl"></i>
@@ -715,7 +1357,8 @@
                     </div>
                 @endif
 
-                @yield('content')
+                    @yield('content')
+                </div>
             </main>
         </div>
     </div>
@@ -723,7 +1366,12 @@
     <!-- Search Modal -->
     <div id="searchModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-start justify-center pt-20">
         <div class="glass-card max-w-2xl w-full mx-4 p-6 rounded-2xl animate-fade-in">
-            <div class="flex items-center justify-between mb-4">
+            <!-- Mobile Menu Button -->
+                    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <div class="flex items-center justify-between mb-4">
                 <h3 class="text-xl font-bold text-green-300">Search</h3>
                 <button onclick="toggleSearch()" class="text-gray-400 hover:text-white transition-colors">
                     <i class="fas fa-times text-xl"></i>
@@ -756,7 +1404,12 @@
     
     <!-- Notifications Dropdown -->
     <div id="notificationsDropdown" class="hidden fixed top-20 right-8 w-96 glass-card rounded-2xl p-6 z-50 animate-fade-in">
-        <div class="flex items-center justify-between mb-4">
+        <!-- Mobile Menu Button -->
+                    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <div class="flex items-center justify-between mb-4">
             <h3 class="text-lg font-bold text-green-300">Notifications</h3>
             <button onclick="toggleNotifications()" class="text-gray-400 hover:text-white transition-colors">
                 <i class="fas fa-times"></i>
@@ -848,6 +1501,39 @@
             const query = e.target.value.toLowerCase();
             // Add your search logic here
             console.log('Searching for:', query);
+        });
+    </script>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('active');
+        }
+        
+        // Close mobile menu when clicking a link
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarLinks = document.querySelectorAll('.sidebar a');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 1024) {
+                        toggleMobileMenu();
+                    }
+                });
+            });
+            
+            // Close menu on window resize if desktop
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 1024) {
+                    const sidebar = document.getElementById('sidebar');
+                    const overlay = document.getElementById('mobileOverlay');
+                    if (sidebar) sidebar.classList.remove('mobile-open');
+                    if (overlay) overlay.classList.remove('active');
+                }
+            });
         });
     </script>
 </body>

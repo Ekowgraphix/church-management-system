@@ -84,4 +84,12 @@
         </div>
     </div>
 </div>
+
+<script>
+// Export Report Button
+document.querySelector('.bg-blue-600').addEventListener('click', function() {
+    alert('📥 Export Financial Report\n\nDownloading Excel report with all financial data...');
+    // TODO: Generate and download Excel file
+});
+</script>
 @endsection

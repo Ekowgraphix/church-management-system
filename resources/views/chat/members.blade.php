@@ -4,22 +4,73 @@
 @section('page-subtitle', 'Message fellow church members')
 
 @section('content')
-<div class="h-screen flex">
-    <!-- Users List Sidebar -->
-    <div class="w-80 glass-card flex flex-col">
-        <!-- Search Bar -->
-        <div class="p-4 border-b border-white/10">
-            <div class="relative">
-                <input type="text" id="searchUsers" placeholder="Search members..." 
-                       class="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500">
-                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-            </div>
-        </div>
+<style>
+    .chat-wrapper {
+        padding: 0.5rem;
+        min-height: 100vh;
+    }
+    
+    .members-list {
+        display: block;
+    }
+    
+    .chat-area {
+        display: none;
+        position: fixed;
+        inset: 0;
+        top: 60px;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        z-index: 50;
+        padding: 0.5rem;
+    }
+    
+    .chat-area.active {
+        display: block;
+    }
+    
+    .members-list.hidden {
+        display: none;
+    }
+    
+    @media (min-width: 1024px) {
+        .chat-wrapper {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+        }
+        
+        .members-list {
+            width: 320px;
+            flex-shrink: 0;
+            display: block !important;
+        }
+        
+        .chat-area {
+            flex: 1;
+            display: block;
+            position: relative;
+            inset: auto;
+            top: auto;
+            background: none;
+            padding: 0;
+        }
+    }
+</style>
 
-        <!-- Users List -->
-        <div id="usersList" class="flex-1 overflow-y-auto">
+<div class="chat-wrapper">
+    <!-- Members List -->
+    <div class="members-list">
+        <div class="bg-slate-900/50 backdrop-blur-xl rounded-2xl p-4">
+            <h2 class="text-xl font-bold text-white mb-4">Messages</h2>
+            <div class="relative mb-4">
+                <input type="text" id="searchUsers" placeholder="Search members..." 
+                       class="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all">
+                <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+            </div>
+
+            <div id="usersList" class="space-y-2">
             @forelse($users as $user)
-                <div class="user-item p-4 border-b border-white/5 hover:bg-white/5 cursor-pointer transition-colors"
+                <div class="user-item p-4 border-b border-white/5 hover:bg-white/10 cursor-pointer transition-all active:scale-98"
                      data-user-id="{{ $user->id }}"
                      data-user-name="{{ $user->name }}">
                     <div class="flex items-center space-x-3">
@@ -32,7 +83,7 @@
                                      alt="{{ $user->name }}"
                                      class="w-12 h-12 rounded-full object-cover border-2 border-green-500">
                             @else
-                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-lg">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-xl shadow-lg">
                                     {{ strtoupper(substr($user->name, 0, 1)) }}
                                 </div>
                             @endif
@@ -42,61 +93,80 @@
                                 </div>
                             @endif
                         </div>
-                        <div class="flex-1">
-                            <div class="font-semibold text-white">{{ $user->name }}</div>
-                            <div class="text-sm text-gray-400">{{ $user->email }}</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-semibold text-white truncate">{{ $user->name }}</div>
+                            <div class="text-sm text-gray-400 truncate">{{ $user->email }}</div>
                         </div>
                     </div>
                 </div>
             @empty
-                <div class="p-8 text-center text-gray-400">
-                    <i class="fas fa-users fa-3x mb-3"></i>
-                    <p>No members found</p>
+                <div class="text-center p-8 text-gray-400">
+                    <i class="fas fa-users text-6xl mb-4 opacity-50"></i>
+                    <p class="text-lg">No members found</p>
+                    <p class="text-sm mt-2">Start connecting with your church community</p>
                 </div>
             @endforelse
+            </div>
         </div>
     </div>
 
     <!-- Chat Area -->
-    <div class="flex-1 flex flex-col glass-card ml-6">
-        <div id="chatPlaceholder" class="flex-1 flex items-center justify-center text-gray-400">
-            <div class="text-center">
-                <i class="fas fa-comments fa-4x mb-4"></i>
-                <p class="text-xl">Select a member to start chatting</p>
-            </div>
-        </div>
-
-        <div id="chatArea" class="flex-1 flex-col hidden">
-            <!-- Chat Header -->
-            <div class="p-4 border-b border-white/10 flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <img id="chatUserPhoto" class="w-10 h-10 rounded-full object-cover border-2 border-green-500 hidden">
-                    <div id="chatUserAvatar" class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold"></div>
-                    <div>
-                        <div id="chatUserName" class="font-semibold text-white"></div>
-                        <div class="text-sm text-gray-400">Active now</div>
+    <div class="chat-area">
+        <div class="bg-slate-900/50 backdrop-blur-xl rounded-2xl flex flex-col overflow-hidden" style="min-height: 80vh;">
+            <!-- Empty State -->
+            <div id="chatPlaceholder" class="flex-1 flex items-center justify-center p-8">
+                <div class="text-center max-w-md mx-auto">
+                    <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+                        <i class="fas fa-comments text-3xl text-white"></i>
                     </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Select a Member</h3>
+                    <p class="text-gray-400">Choose someone to start chatting</p>
                 </div>
-                <button id="closeChatBtn" class="text-gray-400 hover:text-white">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
+            </div>
+
+            <!-- Active Chat -->
+            <div id="chatArea" class="flex flex-col h-full hidden">
+            <!-- Chat Header -->
+            <div class="p-4 border-b border-white/10 bg-slate-900/50 backdrop-blur-xl sticky top-0 z-10">
+                <div class="flex items-center space-x-3">
+                    <button id="backToListBtn" class="lg:hidden text-green-400 hover:text-green-300 w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/5 transition-all flex-shrink-0">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </button>
+                    <img id="chatUserPhoto" class="w-12 h-12 rounded-full object-cover border-2 border-green-500 shadow-lg hidden flex-shrink-0">
+                    <div id="chatUserAvatar" class="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-xl shadow-lg flex-shrink-0"></div>
+                    <div class="flex-1 min-w-0">
+                        <div id="chatUserName" class="font-semibold text-white text-lg truncate"></div>
+                        <div class="text-sm text-green-400 flex items-center">
+                            <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                            Active now
+                        </div>
+                    </div>
+                    <button id="closeChatBtn" class="hidden lg:block text-gray-400 hover:text-white w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/5 transition-all flex-shrink-0">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- Messages Area -->
-            <div id="messagesContainer" class="flex-1 overflow-y-auto p-6 space-y-4">
+            <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-4" style="max-height: calc(80vh - 140px);">
                 <!-- Messages will be loaded here -->
             </div>
 
             <!-- Message Input -->
-            <div class="p-4 border-t border-white/10">
-                <form id="sendMessageForm" class="flex space-x-3">
+            <div class="p-4 border-t border-white/10 bg-slate-900/50 backdrop-blur-xl">
+                <form id="sendMessageForm" class="flex items-end space-x-2">
                     @csrf
                     <input type="hidden" id="receiverId" name="receiver_id">
-                    <input type="text" id="messageInput" name="message" placeholder="Type your message..." 
-                           class="flex-1 px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
-                           required>
-                    <button type="submit" class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 rounded-xl text-white font-semibold hover:from-green-600 hover:to-green-700 transition-all">
-                        <i class="fas fa-paper-plane"></i> Send
+                    <div class="flex-1 relative">
+                        <input type="text" id="messageInput" name="message" placeholder="Message..." 
+                               class="w-full px-4 py-4 pr-12 bg-white/5 border border-white/20 rounded-3xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
+                               required>
+                        <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors">
+                            <i class="fas fa-paperclip text-lg"></i>
+                        </button>
+                    </div>
+                    <button type="submit" class="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-full text-white font-semibold hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center">
+                        <i class="fas fa-paper-plane"></i>
                     </button>
                 </form>
             </div>
@@ -164,13 +234,21 @@
         currentChatUserId = userId;
         currentChatUserName = userName;
 
+        // Mobile: Show chat area, hide members list
+        const chatArea = document.querySelector('.chat-area');
+        const membersList = document.querySelector('.members-list');
+        
+        if (window.innerWidth < 1024) {
+            membersList.classList.add('hidden');
+            chatArea.classList.add('active');
+        }
+
         // Update UI
         const placeholder = document.getElementById('chatPlaceholder');
-        const chatArea = document.getElementById('chatArea');
+        const chatContent = document.getElementById('chatArea');
         
         placeholder.classList.add('hidden');
-        chatArea.classList.remove('hidden');
-        chatArea.classList.add('flex');
+        chatContent.classList.remove('hidden');
         
         document.getElementById('chatUserName').textContent = userName;
         document.getElementById('chatUserAvatar').textContent = userName.charAt(0).toUpperCase();
@@ -313,7 +391,22 @@
         });
     });
 
-        // Close chat
+        // Back to members list (mobile)
+        document.getElementById('backToListBtn').addEventListener('click', function() {
+            console.log('Back to list clicked');
+            const chatArea = document.querySelector('.chat-area');
+            const membersList = document.querySelector('.members-list');
+            
+            chatArea.classList.remove('active');
+            membersList.classList.remove('hidden');
+            
+            document.getElementById('chatArea').classList.add('hidden');
+            document.getElementById('chatPlaceholder').classList.remove('hidden');
+            currentChatUserId = null;
+            currentChatUserName = null;
+        });
+
+        // Close chat (desktop)
         document.getElementById('closeChatBtn').addEventListener('click', function() {
             console.log('Close chat clicked');
             document.getElementById('chatArea').classList.add('hidden');

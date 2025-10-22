@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Church Management System') }}</title>
     
@@ -11,6 +11,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
+        /* FORCE MOBILE BASE STYLES */
+        html {
+            font-size: 16px;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+            position: relative;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            min-width: 320px;
+        }
+        
+        *, *::before, *::after {
+            box-sizing: border-box;
+            max-width: 100%;
+        }
         * {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-font-smoothing: antialiased;
@@ -530,6 +554,200 @@
             cursor: not-allowed;
             transform: none !important;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+                width: 280px !important;
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            
+            .mobile-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 35;
+                backdrop-filter: blur(4px);
+            }
+            
+            .mobile-overlay.active {
+                display: block;
+            }
+            
+            .mobile-menu-btn {
+                display: flex !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            body {
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .glass-card, .card {
+                padding: 1rem !important;
+            }
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        /* Aggressive Mobile Fit CSS */
+        * {
+            box-sizing: border-box !important;
+        }
+        
+        html {
+            overflow-x: hidden;
+            width: 100%;
+        }
+        
+        body {
+            overflow-x: hidden !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        
+        @media (max-width: 1024px) {
+            body, html {
+                overflow-x: hidden !important;
+                max-width: 100vw !important;
+            }
+            
+            .sidebar {
+                position: fixed !important;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                z-index: 50 !important;
+            }
+            
+            main, .main-content, .content-area {
+                width: 100% !important;
+                max-width: 100vw !important;
+                margin-left: 0 !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+                overflow-x: hidden !important;
+            }
+            
+            .container, .max-w-7xl, .w-full {
+                max-width: 100% !important;
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            img {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .top-bar, .header {
+                padding: 1rem !important;
+                flex-wrap: wrap;
+            }
+            
+            h1 {
+                font-size: 1.5rem !important;
+                word-wrap: break-word;
+            }
+            
+            h2 {
+                font-size: 1.25rem !important;
+            }
+            
+            h3 {
+                font-size: 1.1rem !important;
+            }
+            
+            .card, .glass-card, .bg-white {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding: 1rem !important;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            
+            button, .btn, a.btn {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            
+            input, textarea, select {
+                width: 100% !important;
+                font-size: 16px !important;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            body {
+                font-size: 14px !important;
+            }
+            
+            .p-10, .p-8, .p-6 {
+                padding: 1rem !important;
+            }
+            
+            .px-10, .px-8, .px-6 {
+                padding-left: 0.75rem !important;
+                padding-right: 0.75rem !important;
+            }
+            
+            .text-3xl {
+                font-size: 1.25rem !important;
+            }
+            
+            .text-2xl {
+                font-size: 1.125rem !important;
+            }
+            
+            .space-x-6 > * + *, .space-x-4 > * + * {
+                margin-left: 0.5rem !important;
+            }
+            
+            .gap-6 {
+                gap: 0.75rem !important;
+            }
+        }
     </style>
 </head>
 <body class="font-sans antialiased">
@@ -735,7 +953,7 @@
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-0 group-hover:opacity-100 transition-opacity relative z-10 text-green-300"></i>
                 </a>
                 
-                <a href="{{ route('settings.index') }}" class="sidebar-item {{ request()->routeIs('settings.*') ? 'active' : '' }} flex items-center text-green-300 hover:text-green-200 px-6 py-4 rounded-2xl group relative z-10">
+                <a href="{{ route('settings.dashboard') }}" class="sidebar-item {{ request()->routeIs('settings.*') ? 'active' : '' }} flex items-center text-green-300 hover:text-green-200 px-6 py-4 rounded-2xl group relative z-10">
                     <div class="icon-box w-12 h-12 flex items-center justify-center rounded-xl {{ request()->routeIs('settings.*') ? 'gradient-orange' : 'bg-white/5' }} group-hover:gradient-orange transition-all relative z-10">
                         <i class="fas fa-cog text-white"></i>
                     </div>

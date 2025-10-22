@@ -37,5 +37,9 @@ return [
         'max_tokens' => env('OPENAI_MAX_TOKENS', 600),
         'temperature' => env('OPENAI_TEMPERATURE', 0.8),
     ],
+    'youtube' => [
+    'key' => env('YOUTUBE_API_KEY'),
+    ],
+
 
 ];

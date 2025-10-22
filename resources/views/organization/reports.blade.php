@@ -94,4 +94,37 @@
         <p class="text-lg">"In Q3, the Youth Ministry saw a 17% increase in engagement across all branches. Faith Temple leads with 23% member growth. Consider replicating their strategies in other locations."</p>
     </div>
 </div>
+
+<script>
+// Generate Custom Report Button (Header)
+document.querySelector('.bg-blue-600').addEventListener('click', function() {
+    alert('📊 Generate Custom Report\n\nOpening custom report builder...');
+    // TODO: Open custom report form
+});
+
+// Report Type Buttons
+const reportTypes = ['Attendance Report', 'Financial Report', 'Ministry Performance', 'Volunteer Report'];
+document.querySelectorAll('.bg-white.rounded-xl').forEach((btn, index) => {
+    if(index < 4) {
+        btn.addEventListener('click', function() {
+            const reportType = reportTypes[index];
+            alert(`📈 ${reportType}\n\nGenerating ${reportType.toLowerCase()}...`);
+            // TODO: Generate specific report
+        });
+    }
+});
+
+// Generate Report Button (Bottom)
+document.querySelector('.bg-green-600').addEventListener('click', function() {
+    const branch = document.querySelectorAll('select')[0].value;
+    const reportType = document.querySelectorAll('select')[1].value;
+    const dateRange = document.querySelectorAll('select')[2].value;
+    
+    alert(`📊 Generating Report\n\nBranch: ${branch}\nType: ${reportType}\nRange: ${dateRange}\n\nPlease wait...`);
+    // TODO: Generate and download report
+    setTimeout(() => {
+        alert('✅ Report generated successfully!\n\nDownloading...');
+    }, 1500);
+});
+</script>
 @endsection

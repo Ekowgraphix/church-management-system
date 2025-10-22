@@ -48,6 +48,11 @@ class Event extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function mediaAssignments()
+    {
+        return $this->hasMany(MediaEventAssignment::class);
+    }
+
     public function getRegistrationCountAttribute()
     {
         return $this->registrations()->count();

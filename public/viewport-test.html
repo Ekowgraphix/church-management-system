@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Viewport Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        .box {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .big-text {
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+        
+        .pass {
+            background: #10b981;
+        }
+        
+        .fail {
+            background: #ef4444;
+        }
+        
+        button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 1rem;
+            cursor: pointer;
+        }
+        
+        .full-width-bar {
+            width: 100%;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1rem 0;
+            font-weight: bold;
+        }
+        
+        .warning {
+            background: rgba(239, 68, 68, 0.3);
+            border: 2px solid #ef4444;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box">
+            <h1>📱 VIEWPORT TEST</h1>
+            <p>If you can read this easily without zooming, viewport is working!</p>
+        </div>
+        
+        <div class="big-text" id="screenWidth">-</div>
+        
+        <div class="box">
+            <h2 style="font-size: 1.2rem; margin-bottom: 0.5rem;">📐 Screen Info</h2>
+            <div class="info">
+                <strong>Window Width:</strong> <span id="windowW">-</span>
+            </div>
+            <div class="info">
+                <strong>Screen Width:</strong> <span id="screenW">-</span>
+            </div>
+            <div class="info">
+                <strong>Body Width:</strong> <span id="bodyW">-</span>
+            </div>
+            <div class="info">
+                <strong>Pixel Ratio:</strong> <span id="pixelRatio">-</span>
+            </div>
+        </div>
+        
+        <div class="box">
+            <h2 style="font-size: 1.2rem; margin-bottom: 0.5rem;">✅ Viewport Status</h2>
+            <div id="status" class="status">Checking...</div>
+            <p id="message" style="margin-top: 1rem;"></p>
+        </div>
+        
+        <div class="box">
+            <h2 style="font-size: 1.2rem; margin-bottom: 0.5rem;">🎯 Full Width Test</h2>
+            <p style="margin-bottom: 0.5rem; font-size: 0.9rem;">This bar should touch both edges:</p>
+            <div class="full-width-bar">
+                FULL WIDTH
+            </div>
+            <p style="font-size: 0.8rem; opacity: 0.9;">If you see white space on sides, viewport isn't working</p>
+        </div>
+        
+        <div id="warningBox" class="warning" style="display: none;">
+            <strong>⚠️ PROBLEM DETECTED!</strong>
+            <p id="warningText" style="margin-top: 0.5rem;"></p>
+        </div>
+        
+        <button onclick="location.href='/'">
+            🏠 Go to Main System
+        </button>
+        
+        <button onclick="location.reload()" style="background: transparent; color: white; border: 2px solid white;">
+            🔄 Refresh Test
+        </button>
+    </div>
+    
+    <script>
+        function checkViewport() {
+            const windowWidth = window.innerWidth;
+            const screenWidth = window.screen.width;
+            const bodyWidth = document.body.offsetWidth;
+            const bodyScrollWidth = document.body.scrollWidth;
+            const pixelRatio = window.devicePixelRatio || 1;
+            
+            // Update display
+            document.getElementById('screenWidth').textContent = windowWidth + 'px';
+            document.getElementById('windowW').textContent = windowWidth + 'px';
+            document.getElementById('screenW').textContent = screenWidth + 'px';
+            document.getElementById('bodyW').textContent = bodyWidth + 'px';
+            document.getElementById('pixelRatio').textContent = pixelRatio.toFixed(2);
+            
+            // Check if viewport is working
+            const statusEl = document.getElementById('status');
+            const messageEl = document.getElementById('message');
+            const warningBox = document.getElementById('warningBox');
+            const warningText = document.getElementById('warningText');
+            
+            // For mobile devices, window width should be reasonable (not tiny)
+            const isLikelyMobile = windowWidth < 768;
+            const hasHorizontalScroll = bodyScrollWidth > windowWidth;
+            
+            if (isLikelyMobile && windowWidth > 320 && !hasHorizontalScroll) {
+                statusEl.className = 'status pass';
+                statusEl.textContent = '✅ VIEWPORT WORKING!';
+                messageEl.textContent = '🎉 Perfect! Your viewport is configured correctly. The main system should display properly now.';
+            } else if (windowWidth < 100) {
+                statusEl.className = 'status fail';
+                statusEl.textContent = '❌ VIEWPORT BROKEN';
+                messageEl.textContent = '⚠️ Window width is too small. Viewport meta tag may not be working.';
+                warningBox.style.display = 'block';
+                warningText.textContent = 'The viewport meta tag is not being applied. This will cause the main system to show desktop view on mobile.';
+            } else if (hasHorizontalScroll) {
+                statusEl.className = 'status fail';
+                statusEl.textContent = '⚠️ CONTENT OVERFLOW';
+                messageEl.textContent = 'Content is wider than screen. Some elements may be cut off.';
+                warningBox.style.display = 'block';
+                warningText.textContent = 'Body scroll width (' + bodyScrollWidth + 'px) is larger than window width (' + windowWidth + 'px). This causes horizontal scrolling.';
+            } else {
+                statusEl.className = 'status pass';
+                statusEl.textContent = '✅ LOOKS GOOD!';
+                messageEl.textContent = 'Screen width: ' + windowWidth + 'px. Everything appears to be configured correctly!';
+            }
+        }
+        
+        // Run on load and resize
+        checkViewport();
+        window.addEventListener('resize', checkViewport);
+        window.addEventListener('orientationchange', function() {
+            setTimeout(checkViewport, 100);
+        });
+    </script>
+</body>
+</html>

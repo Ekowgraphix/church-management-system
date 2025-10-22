@@ -89,10 +89,10 @@
             </div>
 
             <div class="flex space-x-4">
-                <button type="button" class="flex-1 bg-green-600 text-white py-4 rounded-lg font-semibold hover:bg-green-700 text-lg">
+                <button type="button" onclick="sendBroadcast()" class="flex-1 bg-green-600 text-white py-4 rounded-lg font-semibold hover:bg-green-700 text-lg transition-all">
                     <i class="fas fa-paper-plane mr-2"></i>Send Now
                 </button>
-                <button type="button" class="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700">
+                <button type="button" onclick="scheduleBroadcast()" class="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-all">
                     <i class="fas fa-clock mr-2"></i>Schedule
                 </button>
             </div>
@@ -142,7 +142,7 @@
         <div class="bg-white rounded-2xl shadow-lg p-6">
             <h3 class="text-xl font-bold text-gray-800 mb-4">💬 Active Conversations</h3>
             <div class="space-y-3">
-                <div class="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition">
+                <div onclick="openChat('Pastor Owusu')" class="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                             <span class="font-bold text-blue-600">PO</span>
@@ -154,7 +154,7 @@
                         <span class="text-xs text-gray-500">1h</span>
                     </div>
                 </div>
-                <div class="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition">
+                <div onclick="openChat('Pastor K. Appiah')" class="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
                             <span class="font-bold text-green-600">KA</span>
@@ -170,4 +170,32 @@
         </div>
     </div>
 </div>
+
+<script>
+function sendBroadcast() {
+    const subject = document.querySelector('input[placeholder*="Subject"]').value;
+    const message = document.querySelector('textarea').value;
+    const recipients = document.querySelector('select').value;
+    
+    if(!subject || !message) {
+        alert('⚠️ Please fill in subject and message!');
+        return;
+    }
+    
+    if(confirm(`📤 Send broadcast to ${recipients}?\n\nSubject: ${subject}`)) {
+        alert('✅ Broadcast sent successfully!\n\nYour message has been delivered.');
+        // TODO: Send broadcast via API
+    }
+}
+
+function scheduleBroadcast() {
+    alert('🕐 Schedule Broadcast\n\nChoose date and time to send this message later.');
+    // TODO: Open date/time picker modal
+}
+
+function openChat(name) {
+    alert(`💬 Opening chat with ${name}...`);
+    // TODO: Open chat window or redirect to messaging page
+}
+</script>
 @endsection

@@ -100,4 +100,30 @@
         @endforelse
     </div>
 </div>
+
+<script>
+// Create Campaign Button
+document.querySelector('.bg-green-600').addEventListener('click', function() {
+    alert('➕ Create New Campaign\n\nOpening campaign creation form...');
+    // TODO: Open modal or redirect to campaign form
+});
+
+// Stats Buttons
+document.querySelectorAll('.bg-blue-600').forEach(btn => {
+    btn.addEventListener('click', function() {
+        alert('📊 Event Statistics\n\nShowing detailed event analytics...');
+        // TODO: Show event statistics modal
+    });
+});
+
+// Edit Buttons
+document.querySelectorAll('.fa-edit').forEach(btn => {
+    if(btn.parentElement.classList.contains('bg-green-600')) {
+        btn.parentElement.addEventListener('click', function() {
+            alert('✏️ Edit Event\n\nOpening event editor...');
+            // TODO: Open edit form
+        });
+    }
+});
+</script>
 @endsection

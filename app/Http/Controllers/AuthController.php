@@ -325,6 +325,8 @@ class AuthController extends Controller
                 return redirect()->route('volunteer.dashboard'); // Volunteer Portal
             case 'Church Member':
                 return redirect()->route('portal.index'); // Member Portal
+            case 'Media Team':
+                return redirect()->route('media.dashboard'); // Media Portal
             default:
                 return redirect()->route('dashboard');
         }

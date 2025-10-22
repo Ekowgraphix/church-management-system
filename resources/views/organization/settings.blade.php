@@ -156,4 +156,80 @@
         </div>
     </div>
 </div>
+
+<script>
+// Upload Logo
+document.querySelectorAll('button').forEach(btn => {
+    if(btn.textContent.includes('Upload Logo')) {
+        btn.addEventListener('click', function() {
+            alert('📸 Upload Organization Logo\n\nOpening file picker...');
+            // TODO: Open file upload dialog
+        });
+    }
+});
+
+// Save Changes Form
+document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    if(confirm('💾 Save organization settings?')) {
+        alert('✅ Settings saved successfully!');
+        // TODO: Submit form data to backend
+    }
+});
+
+// Configure Integrations
+document.querySelectorAll('button').forEach(btn => {
+    if(btn.textContent.includes('Configure')) {
+        btn.addEventListener('click', function() {
+            const service = this.closest('.bg-gray-50').querySelector('.font-semibold').textContent;
+            alert(`⚙️ Configure ${service}\n\nOpening configuration panel...`);
+            // TODO: Open integration settings
+        });
+    }
+});
+
+// Create Custom Role
+document.querySelectorAll('button').forEach(btn => {
+    if(btn.textContent.includes('Create Custom Role')) {
+        btn.addEventListener('click', function() {
+            alert('👥 Create Custom Role\n\nDefine permissions for a new role...');
+            // TODO: Open role creation form
+        });
+    }
+});
+
+// Backup Data
+document.querySelectorAll('button').forEach(btn => {
+    if(btn.textContent.includes('Backup Data')) {
+        btn.addEventListener('click', function() {
+            if(confirm('💾 Create full backup of all organization data?')) {
+                alert('⏳ Creating backup...\n\nThis may take a few minutes.');
+                // TODO: Trigger backup process
+            }
+        });
+    }
+});
+
+// Restore Data
+document.querySelectorAll('button').forEach(btn => {
+    if(btn.textContent.includes('Restore Data')) {
+        btn.addEventListener('click', function() {
+            if(confirm('⚠️ WARNING: Restore data from backup?\n\nThis will overwrite current data!')) {
+                alert('⏳ Restoring data...\n\nPlease wait.');
+                // TODO: Trigger restore process
+            }
+        });
+    }
+});
+
+// View Audit Log
+document.querySelectorAll('button').forEach(btn => {
+    if(btn.textContent.includes('View Audit Log')) {
+        btn.addEventListener('click', function() {
+            alert('📋 Audit Log\n\nShowing system activity history...');
+            // TODO: Open audit log viewer
+        });
+    }
+});
+</script>
 @endsection

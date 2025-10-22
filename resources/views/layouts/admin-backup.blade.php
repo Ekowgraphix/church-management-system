@@ -727,7 +727,7 @@
                     <i class="fas fa-chevron-right ml-auto text-xs opacity-0 group-hover:opacity-100 transition-opacity relative z-10 text-green-300"></i>
                 </a>
                 
-                <a href="{{ route('settings.index') }}" class="sidebar-item {{ request()->routeIs('settings.*') ? 'active' : '' }} flex items-center text-green-300 hover:text-green-200 px-6 py-4 rounded-2xl group relative z-10">
+                <a href="{{ route('settings.dashboard') }}" class="sidebar-item {{ request()->routeIs('settings.*') ? 'active' : '' }} flex items-center text-green-300 hover:text-green-200 px-6 py-4 rounded-2xl group relative z-10">
                     <div class="icon-box w-12 h-12 flex items-center justify-center rounded-xl {{ request()->routeIs('settings.*') ? 'gradient-orange' : 'bg-white/5' }} group-hover:gradient-orange transition-all relative z-10">
                         <i class="fas fa-cog text-white"></i>
                     </div>

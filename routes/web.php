@@ -59,6 +59,9 @@ Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail'])->nam
 // Authenticated routes
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/logout', function() {
+        return view('auth.logout');
+    })->name('logout.get');
 });
 
 // ============================================
@@ -114,6 +117,10 @@ Route::middleware(['auth', 'member.only'])->group(function () {
     
     // Prayer Requests (member)
     Route::get('prayer-requests', [PrayerRequestController::class, 'index'])->name('prayer-requests.index');
+    
+    // QR Check-In for Members (Service Scanner)
+    Route::get('qr-checkin/service/scanner', [QRCheckInController::class, 'showServiceScanner'])->name('qr.service.scanner');
+    Route::post('qr-checkin/service/process', [QRCheckInController::class, 'processServiceCheckIn'])->name('qr.service.process');
     Route::get('prayer-requests/create', [PrayerRequestController::class, 'create'])->name('prayer-requests.create');
     Route::post('prayer-requests', [PrayerRequestController::class, 'store'])->name('prayer-requests.store');
     Route::get('prayer-requests/{prayerRequest}', [PrayerRequestController::class, 'show'])->name('prayer-requests.show');
@@ -218,12 +225,16 @@ Route::middleware(['auth', 'volunteer.only'])->prefix('volunteer')->name('volunt
     
     // Task Manager
     Route::get('/tasks', [\App\Http\Controllers\VolunteerPortalController::class, 'tasks'])->name('tasks');
+    Route::post('/tasks/{id}/complete', [\App\Http\Controllers\VolunteerPortalController::class, 'completeTask'])->name('tasks.complete');
+    Route::post('/tasks/{id}/upload-proof', [\App\Http\Controllers\VolunteerPortalController::class, 'uploadProof'])->name('tasks.upload-proof');
     
     // My Team / Group
     Route::get('/team', [\App\Http\Controllers\VolunteerPortalController::class, 'team'])->name('team');
     
     // Prayer Requests
     Route::get('/prayer', [\App\Http\Controllers\VolunteerPortalController::class, 'prayer'])->name('prayer');
+    Route::post('/prayer/submit', [\App\Http\Controllers\VolunteerPortalController::class, 'submitPrayer'])->name('prayer.submit');
+    Route::post('/prayer/{id}/prayed', [\App\Http\Controllers\VolunteerPortalController::class, 'prayedFor'])->name('prayer.prayed');
     
     // AI Helper
     Route::get('/ai-helper', [\App\Http\Controllers\VolunteerPortalController::class, 'aiHelper'])->name('ai-helper');
@@ -270,6 +281,61 @@ Route::middleware(['auth', 'ministry.leader.only'])->prefix('ministry-leader')->
 });
 
 // ============================================
+// MEDIA TEAM PORTAL ROUTES (Media Team Only)
+// ============================================
+Route::middleware(['auth', 'media.team.only'])->prefix('media')->name('media.')->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [\App\Http\Controllers\MediaPortalController::class, 'dashboard'])->name('dashboard');
+    
+    // Media Library
+    Route::get('/library', [\App\Http\Controllers\MediaPortalController::class, 'library'])->name('library');
+    Route::post('/library/upload', [\App\Http\Controllers\MediaPortalController::class, 'uploadMedia'])->name('library.upload');
+    Route::delete('/library/{id}', [\App\Http\Controllers\MediaPortalController::class, 'deleteMedia'])->name('library.delete');
+    
+    // Gallery Management
+    Route::get('/gallery', [\App\Http\Controllers\MediaPortalController::class, 'gallery'])->name('gallery');
+    Route::post('/gallery/create', [\App\Http\Controllers\MediaPortalController::class, 'createGallery'])->name('gallery.create');
+    Route::post('/gallery/sync/{id}', [\App\Http\Controllers\MediaPortalController::class, 'syncGallery'])->name('gallery.sync');
+    
+    // Livestream Control
+    Route::get('/livestream', [\App\Http\Controllers\MediaPortalController::class, 'livestream'])->name('livestream');
+    Route::post('/livestream/create', [\App\Http\Controllers\MediaPortalController::class, 'createLivestream'])->name('livestream.create');
+    Route::post('/livestream/start/{id}', [\App\Http\Controllers\MediaPortalController::class, 'startLivestream'])->name('livestream.start');
+    Route::post('/livestream/stop/{id}', [\App\Http\Controllers\MediaPortalController::class, 'stopLivestream'])->name('livestream.stop');
+    Route::post('/livestream/upload-to-library/{id}', [\App\Http\Controllers\MediaPortalController::class, 'uploadStreamToLibrary'])->name('livestream.upload');
+    
+    // Event Media Scheduling
+    Route::get('/schedule', [\App\Http\Controllers\MediaPortalController::class, 'schedule'])->name('schedule');
+    Route::post('/schedule/assign', [\App\Http\Controllers\MediaPortalController::class, 'assignTeamToEvent'])->name('schedule.assign');
+    Route::post('/schedule/upload', [\App\Http\Controllers\MediaPortalController::class, 'uploadEventMedia'])->name('schedule.upload');
+    Route::post('/schedule/notify/{eventId}', [\App\Http\Controllers\MediaPortalController::class, 'notifyEventTeam'])->name('schedule.notify');
+    
+    // AI Tools
+    Route::get('/ai-tools', [\App\Http\Controllers\MediaPortalController::class, 'aiTools'])->name('ai-tools');
+    
+    // Announcements & Graphics
+    Route::get('/announcements', [\App\Http\Controllers\MediaPortalController::class, 'announcements'])->name('announcements');
+    Route::post('/announcements/create', [\App\Http\Controllers\MediaPortalController::class, 'createAnnouncement'])->name('announcements.create');
+    
+    // Team Management
+    Route::get('/team', [\App\Http\Controllers\MediaPortalController::class, 'team'])->name('team');
+    Route::post('/team/add', [\App\Http\Controllers\MediaPortalController::class, 'addTeamMember'])->name('team.add');
+    Route::put('/team/{id}', [\App\Http\Controllers\MediaPortalController::class, 'updateTeamMember'])->name('team.update');
+    Route::delete('/team/{id}', [\App\Http\Controllers\MediaPortalController::class, 'deleteTeamMember'])->name('team.delete');
+    
+    // Analytics
+    Route::get('/analytics', [\App\Http\Controllers\MediaPortalController::class, 'analytics'])->name('analytics');
+    
+    // Settings
+    Route::get('/settings', [\App\Http\Controllers\MediaPortalController::class, 'settings'])->name('settings');
+    
+    // YouTube Integration
+    Route::get('/youtube/search', [\App\Http\Controllers\YouTubeController::class, 'search'])->name('youtube.search');
+    Route::get('/youtube/video/{videoId}', [\App\Http\Controllers\YouTubeController::class, 'show'])->name('youtube.show');
+    Route::get('/youtube/channel', [\App\Http\Controllers\YouTubeController::class, 'channel'])->name('youtube.channel');
+});
+
+// ============================================
 // STAFF ROUTES (Admin, Pastor, Ministry Leader, Organization, Volunteer)
 // ============================================
 Route::middleware(['auth', 'staff.only'])->group(function () {
@@ -311,6 +377,14 @@ Route::middleware(['auth', 'staff.only'])->group(function () {
     Route::get('qr-checkin/member/{member}/generate', [QRCheckInController::class, 'generateMemberQR'])->name('qr.member.generate');
     Route::get('qr-checkin/bulk-generate', [QRCheckInController::class, 'showBulkGenerate'])->name('qr.bulk.generate.page');
     Route::post('qr-checkin/bulk-generate', [QRCheckInController::class, 'bulkGenerateQR'])->name('qr.bulk.generate');
+    
+    // Service QR Management (Staff only - for generating QR codes)
+    Route::get('qr-checkin/service/{service}/qr', [QRCheckInController::class, 'showServiceQR'])->name('qr.service.show');
+    Route::get('qr-checkin/service/{service}/generate', [QRCheckInController::class, 'generateServiceQR'])->name('qr.service.generate');
+    Route::get('qr-checkin/services/active', [QRCheckInController::class, 'getActiveServices'])->name('qr.services.active');
+    
+    // Public route for QR scanning (no auth required)
+    Route::get('checkin/{token}', [QRCheckInController::class, 'processServiceCheckIn'])->name('qr.service.checkin')->withoutMiddleware(['auth']);
     
     // Debug route
     Route::get('/debug-photos', function () {

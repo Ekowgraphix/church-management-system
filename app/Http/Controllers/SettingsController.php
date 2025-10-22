@@ -16,21 +16,8 @@ class SettingsController extends Controller
     
     public function index()
     {
-        $settings = [
-            'church_name' => 'K.G.C Emmanuel Temple',
-            'church_email' => 'info@church.com',
-            'church_phone' => '0241234567',
-            'church_address' => 'Accra, Ghana',
-        ];
-
-        $stats = [
-            'total_members' => DB::table('members')->count(),
-            'total_visitors' => DB::table('visitors')->count(),
-            'total_donations' => DB::table('donations')->count(),
-            'total_equipment' => DB::table('equipment')->count(),
-        ];
-
-        return view('settings.index', compact('settings', 'stats'));
+        // Redirect to dashboard
+        return redirect()->route('settings.dashboard');
     }
 
     public function update(Request $request)

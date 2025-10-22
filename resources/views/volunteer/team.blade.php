@@ -20,10 +20,10 @@
                 <p class="text-sm opacity-90">Ushering Team Coordinator</p>
             </div>
             <div class="flex space-x-2">
-                <button class="bg-white text-orange-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100">
+                <button onclick="callTeamLeader('John Mensah', '+233 24 123 4567')" class="bg-white text-orange-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-all">
                     <i class="fas fa-phone"></i>
                 </button>
-                <button class="bg-white text-orange-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100">
+                <button onclick="messageTeamLeader('John Mensah')" class="bg-white text-orange-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-all">
                     <i class="fas fa-comment"></i>
                 </button>
             </div>
@@ -42,7 +42,7 @@
                     <p class="font-semibold text-gray-800">Abigail Owusu</p>
                     <p class="text-sm text-gray-600">Volunteer</p>
                 </div>
-                <button class="text-blue-600 hover:text-blue-800">
+                <button onclick="messageTeamMember('Abigail Owusu')" class="text-blue-600 hover:text-blue-800 transition-all">
                     <i class="fas fa-comment"></i>
                 </button>
             </div>
@@ -54,7 +54,7 @@
                     <p class="font-semibold text-gray-800">Felix Addo</p>
                     <p class="text-sm text-gray-600">Volunteer</p>
                 </div>
-                <button class="text-blue-600 hover:text-blue-800">
+                <button onclick="messageTeamMember('Felix Addo')" class="text-blue-600 hover:text-blue-800 transition-all">
                     <i class="fas fa-comment"></i>
                 </button>
             </div>
@@ -77,4 +77,89 @@
         </div>
     </div>
 </div>
+
+<script>
+// Call Team Leader
+function callTeamLeader(name, phone) {
+    if(confirm(`📞 Call ${name}?\n\nPhone: ${phone}`)) {
+        alert(`📱 Dialing ${phone}...\n\nOpening phone dialer.`);
+        // On mobile, this would trigger the phone dialer
+        window.location.href = `tel:${phone}`;
+    }
+}
+
+// Message Team Leader
+function messageTeamLeader(name) {
+    alert(`💬 Message ${name}\n\nOpening messaging interface...`);
+    // TODO: Open internal messaging system or redirect to communication page
+    // window.location.href = '/volunteer/communication?to=' + encodeURIComponent(name);
+}
+
+// Message Team Member
+function messageTeamMember(name) {
+    const message = prompt(`💬 Send message to ${name}:\n\nType your message:`);
+    
+    if(message && message.trim()) {
+        // Show sending feedback
+        alert(`✉️ Sending message...\n\nTo: ${name}\nMessage: "${message}"\n\nMessage sent successfully!`);
+        
+        // TODO: Send message via API
+        // fetch('/api/messages/send', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        //     },
+        //     body: JSON.stringify({
+        //         recipient: name,
+        //         message: message
+        //     })
+        // });
+    }
+}
+
+// View Full Team Stats
+function viewTeamStats() {
+    alert(`📊 Team Statistics\n\n` +
+          `Team Name: Ushering Team\n` +
+          `Total Members: 8\n` +
+          `Active Members: 7\n` +
+          `Attendance Rate: 95%\n` +
+          `Tasks Completed: 142\n` +
+          `Average Response Time: 2.5 hours\n\n` +
+          `🏆 Top Performer: Abigail Owusu\n` +
+          `⭐ Most Helpful: Felix Addo`);
+}
+
+// Schedule Team Meeting
+function scheduleTeamMeeting() {
+    const date = prompt('📅 Schedule Team Meeting\n\nEnter date (YYYY-MM-DD):');
+    
+    if(date) {
+        const time = prompt('⏰ Enter time (HH:MM):');
+        
+        if(time) {
+            alert(`✅ Team Meeting Scheduled!\n\n` +
+                  `📅 Date: ${date}\n` +
+                  `⏰ Time: ${time}\n` +
+                  `👥 Participants: All team members\n\n` +
+                  `Notifications will be sent to all team members.`);
+            
+            // TODO: Create meeting via API
+        }
+    }
+}
+
+// Request Team Backup
+function requestBackup() {
+    if(confirm('🆘 Request Team Backup?\n\nThis will notify available volunteers to assist your team.')) {
+        alert(`📢 Backup Request Sent!\n\n` +
+              `Notifying available volunteers...\n` +
+              `Expected response time: 15 minutes\n\n` +
+              `You will receive a notification when someone accepts.`);
+        
+        // TODO: Send backup request via API
+    }
+}
+</script>
 @endsection

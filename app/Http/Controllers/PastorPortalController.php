@@ -9,6 +9,7 @@ use App\Models\Donation;
 use App\Models\CounsellingSession;
 use App\Models\Sermon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
 class PastorPortalController extends Controller
@@ -313,11 +314,11 @@ class PastorPortalController extends Controller
 
         $user = auth()->user();
 
-        if (!\Hash::check($request->current_password, $user->password)) {
+        if (!Hash::check($request->current_password, $user->password)) {
             return back()->withErrors(['current_password' => 'The current password is incorrect. Please try again.']);
         }
 
-        $user->update(['password' => \Hash::make($request->new_password)]);
+        $user->update(['password' => Hash::make($request->new_password)]);
 
         return redirect()->back()->with('success', 'Password changed successfully! Please use your new password next time you log in.');
     }

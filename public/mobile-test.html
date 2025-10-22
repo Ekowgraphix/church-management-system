@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Responsive Test - Church Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+        }
+        
+        .device-info {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .device-info h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .info-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .info-item label {
+            font-weight: 600;
+            color: #333;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .info-item .value {
+            font-size: 1.2rem;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .test-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .test-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-card i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .feature-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .feature-card p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .status.good {
+            background: #10b981;
+            color: white;
+        }
+        
+        .status.warning {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .status.poor {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: transform 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+        
+        .responsive-test {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        
+        .responsive-test img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            body {
+                padding: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.2rem;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📱 Mobile Responsive Test</h1>
+            <p>Church Management System - Device Compatibility Check</p>
+        </div>
+        
+        <div class="device-info">
+            <h2>🖥️ Your Device Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Screen Width:</label>
+                    <div class="value" id="screenWidth">-</div>
+                </div>
+                <div class="info-item">
+                    <label>Screen Height:</label>
+                    <div class="value" id="screenHeight">-</div>
+                </div>
+                <div class="info-item">
+                    <label>Device Type:</label>
+                    <div class="value" id="deviceType">-</div>
+                </div>
+                <div class="info-item">
+                    <label>Orientation:</label>
+                    <div class="value" id="orientation">-</div>
+                </div>
+                <div class="info-item">
+                    <label>Touch Support:</label>
+                    <div class="value" id="touchSupport">-</div>
+                </div>
+                <div class="info-item">
+                    <label>Browser:</label>
+                    <div class="value" id="browser">-</div>
+                </div>
+            </div>
+            <div style="margin-top: 20px; text-align: center;">
+                <span id="compatibilityStatus" class="status good">✓ Fully Compatible</span>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🎯 Access Your System</h3>
+            <p style="margin-bottom: 15px; color: #666;">Choose your portal to test responsiveness:</p>
+            <div class="feature-grid">
+                <div class="feature-card" onclick="goToSystem('')">
+                    <i class="fas fa-home"></i>
+                    <h4>Main Login</h4>
+                    <p>Login page for all users</p>
+                </div>
+                <div class="feature-card" onclick="goToSystem('pastor/dashboard')">
+                    <i class="fas fa-user-tie"></i>
+                    <h4>Pastor Portal</h4>
+                    <p>Full church oversight</p>
+                </div>
+                <div class="feature-card" onclick="goToSystem('ministry-leader/dashboard')">
+                    <i class="fas fa-users-cog"></i>
+                    <h4>Ministry Leader</h4>
+                    <p>Ministry management</p>
+                </div>
+                <div class="feature-card" onclick="goToSystem('member/dashboard')">
+                    <i class="fas fa-user"></i>
+                    <h4>Member Portal</h4>
+                    <p>Personal dashboard</p>
+                </div>
+                <div class="feature-card" onclick="goToSystem('qr-checkin')">
+                    <i class="fas fa-qrcode"></i>
+                    <h4>QR Check-In</h4>
+                    <p>Attendance scanning</p>
+                </div>
+                <div class="feature-card" onclick="goToSystem('events')">
+                    <i class="fas fa-calendar"></i>
+                    <h4>Events</h4>
+                    <p>Calendar & registration</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>✅ Responsive Features</h3>
+            <div class="responsive-test">
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 10px 0; border-bottom: 1px solid #ddd;">
+                        <i class="fas fa-check-circle" style="color: #10b981; margin-right: 10px;"></i>
+                        <strong>Hamburger Menu:</strong> Touch-friendly mobile navigation
+                    </li>
+                    <li style="padding: 10px 0; border-bottom: 1px solid #ddd;">
+                        <i class="fas fa-check-circle" style="color: #10b981; margin-right: 10px;"></i>
+                        <strong>Adaptive Layout:</strong> Adjusts to any screen size
+                    </li>
+                    <li style="padding: 10px 0; border-bottom: 1px solid #ddd;">
+                        <i class="fas fa-check-circle" style="color: #10b981; margin-right: 10px;"></i>
+                        <strong>Touch Optimized:</strong> Larger buttons for mobile
+                    </li>
+                    <li style="padding: 10px 0; border-bottom: 1px solid #ddd;">
+                        <i class="fas fa-check-circle" style="color: #10b981; margin-right: 10px;"></i>
+                        <strong>Responsive Tables:</strong> Scrollable on small screens
+                    </li>
+                    <li style="padding: 10px 0; border-bottom: 1px solid #ddd;">
+                        <i class="fas fa-check-circle" style="color: #10b981; margin-right: 10px;"></i>
+                        <strong>Image Optimization:</strong> Scales perfectly
+                    </li>
+                    <li style="padding: 10px 0;">
+                        <i class="fas fa-check-circle" style="color: #10b981; margin-right: 10px;"></i>
+                        <strong>Form Optimization:</strong> Mobile-friendly inputs
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>📱 Device Optimization</h3>
+            <div class="info-grid" style="margin-top: 15px;">
+                <div class="info-item">
+                    <label>📱 Phone (< 640px)</label>
+                    <div style="color: #10b981; font-weight: 600; margin-top: 5px;">✓ Optimized</div>
+                    <p style="font-size: 0.85rem; color: #666; margin-top: 5px;">Single column, large buttons</p>
+                </div>
+                <div class="info-item">
+                    <label>📱 Tablet (640px - 1024px)</label>
+                    <div style="color: #10b981; font-weight: 600; margin-top: 5px;">✓ Optimized</div>
+                    <p style="font-size: 0.85rem; color: #666; margin-top: 5px;">2-column grid, slide menu</p>
+                </div>
+                <div class="info-item">
+                    <label>💻 Desktop (> 1024px)</label>
+                    <div style="color: #10b981; font-weight: 600; margin-top: 5px;">✓ Optimized</div>
+                    <p style="font-size: 0.85rem; color: #666; margin-top: 5px;">Full sidebar, multi-column</p>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn" onclick="goToSystem('')">
+                🚀 Launch Church System
+            </button>
+            <button class="btn btn-outline" onclick="location.reload()" style="margin-left: 10px;">
+                🔄 Refresh Test
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        function updateDeviceInfo() {
+            // Screen dimensions
+            document.getElementById('screenWidth').textContent = window.innerWidth + 'px';
+            document.getElementById('screenHeight').textContent = window.innerHeight + 'px';
+            
+            // Device type
+            let deviceType = 'Desktop';
+            if (window.innerWidth < 640) {
+                deviceType = 'Phone';
+            } else if (window.innerWidth < 1024) {
+                deviceType = 'Tablet';
+            }
+            document.getElementById('deviceType').textContent = deviceType;
+            
+            // Orientation
+            const orientation = window.innerWidth > window.innerHeight ? 'Landscape' : 'Portrait';
+            document.getElementById('orientation').textContent = orientation;
+            
+            // Touch support
+            const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            document.getElementById('touchSupport').textContent = hasTouch ? 'Yes ✓' : 'No';
+            
+            // Browser detection
+            let browser = 'Unknown';
+            if (navigator.userAgent.indexOf('Chrome') > -1) browser = 'Chrome';
+            else if (navigator.userAgent.indexOf('Safari') > -1) browser = 'Safari';
+            else if (navigator.userAgent.indexOf('Firefox') > -1) browser = 'Firefox';
+            else if (navigator.userAgent.indexOf('Edge') > -1) browser = 'Edge';
+            document.getElementById('browser').textContent = browser;
+            
+            // Compatibility status
+            const statusEl = document.getElementById('compatibilityStatus');
+            if (window.innerWidth < 320) {
+                statusEl.className = 'status poor';
+                statusEl.textContent = '⚠ Screen too small';
+            } else if (window.innerWidth < 640) {
+                statusEl.className = 'status good';
+                statusEl.textContent = '✓ Phone Mode Active';
+            } else if (window.innerWidth < 1024) {
+                statusEl.className = 'status good';
+                statusEl.textContent = '✓ Tablet Mode Active';
+            } else {
+                statusEl.className = 'status good';
+                statusEl.textContent = '✓ Desktop Mode Active';
+            }
+        }
+        
+        function goToSystem(path) {
+            const baseUrl = window.location.origin;
+            window.location.href = baseUrl + '/' + path;
+        }
+        
+        // Update on load
+        updateDeviceInfo();
+        
+        // Update on resize
+        window.addEventListener('resize', updateDeviceInfo);
+        
+        // Update on orientation change
+        window.addEventListener('orientationchange', function() {
+            setTimeout(updateDeviceInfo, 100);
+        });
+    </script>
+</body>
+</html>
